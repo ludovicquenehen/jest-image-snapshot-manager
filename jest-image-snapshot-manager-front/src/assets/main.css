@@ -1,0 +1,196 @@
+@import './base.css';
+
+:root {
+  --plum: #963484ff;
+  --true-blue: #3066beff;
+  --argentinian-blue: #60afffff;
+  --deep-sky-blue: #28c2ffff;
+  --aqua: #2af5ffff;
+  --amber: #f3b700ff;
+  --malachite: #32e875ff;
+  --rusty-red: #d62246ff;
+}
+
+#app {
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+.link {
+  text-decoration: underline;
+  color: var(--true-blue);
+  cursor: pointer;
+}
+
+.link:hover {
+  color: white;
+}
+
+input,
+select,
+option,
+button {
+  padding: 6px 8px 6px 8px;
+  border: 1px solid #fff;
+  background: transparent;
+  border-radius: 4px;
+  white-space: nowrap;
+  min-width: fit-content;
+  height: 40px !important;
+}
+
+.checkbox {
+  cursor: pointer;
+  margin-top: 8px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+}
+
+.checkbox > i {
+  height: 22px;
+  width: 22px;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-size: 20px;
+}
+
+.checkbox.selected i {
+  background: var(--deep-sky-blue);
+}
+
+.bg-blue {
+  background: #28c2ff55;
+}
+
+.bg-green {
+  background: #32e87555;
+}
+
+.bg-blue-green {
+  background: linear-gradient(90deg, #28c2ff55 0%, #32e87555 100%);
+}
+
+button,
+select {
+  font-weight: 500;
+}
+
+button,
+select,
+img,
+.paginate {
+  user-select: none;
+}
+
+button {
+  transition: all 0.2s;
+}
+
+.button-white,
+.tag-white {
+  border: 1px solid var(--plum);
+  background: linear-gradient(120deg, var(--plum), transparent, transparent);
+  background-size: 10000% 100%;
+  background-position: 100% 0;
+}
+
+.button-green,
+.tag-green {
+  border: 1px solid var(--malachite);
+  background: linear-gradient(120deg, var(--malachite), transparent, transparent);
+  background-size: 10000% 100%;
+  background-position: 100% 0;
+}
+
+.button-red,
+.tag-red {
+  border: 1px solid var(--rusty-red);
+  background: linear-gradient(120deg, var(--rusty-red), transparent, transparent);
+  background-size: 10000% 100%;
+  background-position: 100% 0;
+}
+
+.button-warning,
+.tag-warning {
+  border: 1px solid var(--amber);
+  background: linear-gradient(120deg, var(--amber), transparent, transparent);
+  background-size: 10000% 100%;
+  background-position: 100% 0;
+}
+
+.button-action {
+  border: 1px solid var(--true-blue);
+  background: linear-gradient(120deg, var(--true-blue), transparent, transparent);
+  background-size: 10000% 100%;
+  background-position: 100% 0;
+}
+
+.text-plum {
+  color: var(--plum);
+}
+
+.text-green {
+  color: var(--malachite);
+}
+
+.text-warning {
+  color: var(--amber);
+}
+
+.text-red {
+  color: var(--rusty-red);
+}
+
+/* .button-warning[disabled] {
+  border: 1px solid var(--amber);
+	background: var(--amber);
+  cursor: pointer;
+  color: #fff;
+} */
+
+button:hover:not([disabled]),
+button[disabled],
+.tag.selected {
+  background-position: 0 200%;
+  cursor: pointer;
+  color: #fff;
+}
+
+.tag {
+  border-width: 2px;
+  border-radius: 99px;
+  padding: 8px 20px;
+  font-weight: 500 !important;
+  height: 40px !important;
+  display: flex;
+  align-items: center;
+}
+
+button[disabled],
+.tag.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+select:hover {
+  background-position: 0 200%;
+  cursor: pointer;
+  color: #fff;
+}
+
+.tag:hover:not(.disabled) {
+  cursor: pointer;
+}
+
+select > option {
+  color: #000;
+}
