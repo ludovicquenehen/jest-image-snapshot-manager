@@ -1,67 +1,12 @@
 <template>
   <div v-if="!loading">
-    <div v-if="useUserStore.user" class="flex items-center fixed right-10 gap-2">
-      <button
-        v-if="useUserStore.isAdmin"
-        class="button-warning w-10 flex justify-center items-center rounded-full"
-        @click="router.push('/admin')"
-      >
-        <i class="mdi mdi-shield-crown-outline" />
-      </button>
-      <button
-        class="button-action w-10 flex justify-center items-center rounded-full"
-        @click="router.push('/user')"
-      >
-        <i class="mdi mdi-account" />
-      </button>
-      <button class="button-red w-10 flex justify-center items-center rounded-full" @click="logout">
-        <i class="mdi mdi-logout" />
-      </button>
-    </div>
+    <Toolbar :items="toolbarItems" />
     <div>
       <div
         v-if="useUserStore.user"
         class="flex flex-col fixed top-[30%] left-5 gap-2 border-2 border-current rounded-lg"
       >
-        <div class="w-16 h-16 flex justify-center mt-4">
-          <i
-            :class="[
-              'mdi mdi-home text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-              { 'text-cyan-600': route.path === '/' }
-            ]"
-            @click="router.push('/')"
-          />
-        </div>
-        <div class="w-16 h-16 flex justify-center">
-          <i
-            :class="[
-              'mdi mdi-git text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-              { 'text-cyan-600': route.path === '/flow' }
-            ]"
-            @click="router.push('/flow')"
-          />
-        </div>
-        <div class="w-16 h-16 flex justify-center">
-          <i
-            :class="[
-              'mdi mdi-monitor-screenshot text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-              {
-                'text-cyan-600':
-                  route.path === '/snapshots' || (route.path.startsWith('/history') && route.hash)
-              }
-            ]"
-            @click="router.push('/snapshots')"
-          />
-        </div>
-        <div class="w-16 h-16 flex justify-center">
-          <i
-            :class="[
-              'mdi mdi-history text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-              { 'text-cyan-600': route.path.startsWith('/history') && !route.hash }
-            ]"
-            @click="router.push(`/history/${truths[0]?.id}`)"
-          />
-        </div>
+        <Navbar :items="navbarItems" />
       </div>
       <RouterView class="ml-24" />
       <a
@@ -73,11 +18,13 @@
   </div>
 </template>
 <script setup>
-import { name, version } from '@/../package.json'
+import { version } from '@/../package.json'
 import { RouterView } from 'vue-router'
 import useProjectStore from '@/stores/use-project'
 import useUserStore from '@/stores/use-user'
 import useSnapshotStore from '@/stores/use-snapshot'
+import Navbar from '@/components/app/Navbar.vue'
+import Toolbar from '@/components/app/Toolbar.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -88,6 +35,56 @@ const logout = async () => {
 }
 
 const truths = computed(() => useSnapshotStore.snapshots.filter((e) => !!e.truth))
+
+const navbarItems = computed(() => [
+  {
+    iconClass: () => [
+      'mdi mdi-home text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+      { 'text-cyan-600': route.path === '/' }
+    ],
+    action: () => router.push('/')
+  },
+  {
+    iconClass: () => [
+      'mdi mdi-git text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+      { 'text-cyan-600': route.path === '/flow' }
+    ],
+    action: () => router.push('/flow')
+  },
+  {
+    iconClass: () => [
+      'mdi mdi-monitor-screenshot text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+      { 'text-cyan-600': route.path === '/snapshots' }
+    ],
+    action: () => router.push('/snapshots')
+  },
+  {
+    iconClass: () => [
+      'mdi mdi-history text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+      { 'text-cyan-600': route.path.startsWith('/history') && !route.hash }
+    ],
+    action: () => router.push(`/history/${truths.value[0]?.id}`)
+  }
+])
+
+const toolbarItems = ref([
+  {
+    admin: true,
+    iconClass: 'mdi mdi-shield-crown-outline',
+    color: 'warning',
+    action: () => router.push('/admin')
+  },
+  {
+    iconClass: 'mdi mdi-account',
+    color: 'action',
+    action: () => router.push('/user')
+  },
+  {
+    iconClass: 'mdi mdi-logout',
+    color: 'red',
+    action: logout
+  }
+])
 
 const loading = ref(true)
 onMounted(async () => {

@@ -134,6 +134,12 @@ button {
   background-position: 100% 0;
 }
 
+button.fill {
+  background-position: 0 200%;
+  cursor: default !important;
+  color: #fff;
+}
+
 .text-plum {
   color: var(--plum);
 }
