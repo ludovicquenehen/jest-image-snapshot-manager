@@ -20,6 +20,7 @@ router
     router.post('reset-password', [UsersController, 'resetPassword'])
     router.get('users', [UsersController, 'index']).use(middleware.auth())
     router.put('user', [UsersController, 'invite']).use(middleware.auth()).use(middleware.admin())
+		router.get('/activate/:id', [UsersController, 'activate']).use(middleware.auth()).use(middleware.admin())
     router
       .post('user/:id', [UsersController, 'update'])
       .use(middleware.auth())

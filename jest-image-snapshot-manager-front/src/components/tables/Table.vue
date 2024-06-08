@@ -10,7 +10,7 @@
         { 'border-b-2 border-current': !hideColumns },
         typeof rowClass === 'function' ? rowClass(row, ...parentRows) : rowClass
       ]"
-      @click="rowClick(row, ...parentRows)"
+      @click="rowClick ? rowClick(row, ...parentRows) : () => {}"
     >
       <div class="flex gap-4 items-center">
         <span
@@ -61,8 +61,15 @@
                 :rowClass="column.list.rowClass"
               />
             </template>
-            <template v-else-if="column.type === 'img'">
+            <template v-else-if="column.src">
               <img :src="column.src(row)" />
+            </template>
+            <template v-else-if="column.component">
+              <component
+                :is="column.component.is"
+                v-model="row[column.component.model]"
+                @click="handleClick(row, column.component.action)"
+              />
             </template>
             <template v-else>{{ row }}</template>
           </template>
@@ -72,7 +79,7 @@
   </div>
 </template>
 <script setup>
-import Table from '@/components/Table.vue'
+import Table from '@/components/tables/Table.vue'
 const props = defineProps({
   hideColumns: {
     type: Boolean
@@ -97,7 +104,7 @@ const props = defineProps({
     type: Function
   }
 })
-const emit = defineEmits(['select'])
+const emit = defineEmits(['select', 'click'])
 
 const deepGet = (obj, keys) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
 const handleObject = (fld) => {
@@ -106,7 +113,7 @@ const handleObject = (fld) => {
       acc[k] = (...evt) => {
         return v(...evt, ...props.parentRows)
       }
-    } else if (typeof v === 'object' && !Array.isArray(v)) {
+    } else if (typeof v === 'object' && !Array.isArray(v) && !v.component) {
       acc[k] = handleObject(v)
     } else {
       acc[k] = v
@@ -115,6 +122,11 @@ const handleObject = (fld) => {
   }, {})
 
   return t
+}
+
+const handleClick = (row, action) => {
+  action(row)
+  emit('click', row)
 }
 
 const computedColumns = computed(() => handleObject(props.columns))

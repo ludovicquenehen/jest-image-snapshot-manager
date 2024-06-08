@@ -12,7 +12,7 @@
 <script setup>
 import useSnapshotStore from '@/stores/use-snapshot'
 import useUserStore from '@/stores/use-user'
-import Table from '@/components/Table.vue'
+import Table from '@/components/tables/Table.vue'
 import useUser from '@/stores/use-user'
 
 const router = useRouter()

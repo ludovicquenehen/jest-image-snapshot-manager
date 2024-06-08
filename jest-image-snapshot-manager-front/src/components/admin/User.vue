@@ -22,7 +22,9 @@
 <script setup>
 import useUserStore from '@/stores/use-user'
 import useProjectStore from '@/stores/use-project'
-import Table from '@/components/Table.vue'
+import Table from '@/components/tables/Table.vue'
+import Checkbox from '@/components/inputs/Checkbox.vue'
+import useUser from '@/stores/use-user'
 
 const users = computed(() =>
   useUserStore.users
@@ -41,6 +43,18 @@ const columns = ref([
     label: 'ID',
     class: 'w-8',
     field: 'id'
+  },
+  {
+    label: 'Active',
+    class: 'w-16 flex justify-center',
+    component: {
+      is: Checkbox,
+      model: 'active',
+      action: async (row) => {
+        await useUserStore.activate(row.id)
+        await useUserStore.fetch(true)
+      }
+    }
   },
   {
     label: 'Email',

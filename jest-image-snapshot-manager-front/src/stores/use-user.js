@@ -18,6 +18,14 @@ export default reactive({
   async me() {
     this.user = (await api.get('/me'))?.data || null
   },
+	async activate(id) {
+    try {
+      await api.get(`/activate/${id}`)
+      toast.success('User activated successfully')
+    } catch {
+      toast.error('User activation error')
+    }
+  },
   async login(form) {
     try {
       await api.post('/login', { ...form })

@@ -20,12 +20,7 @@
         >
           <i class="mdi mdi-chevron-right" />
         </button>
-        <div class="flex items-end gap-2">
-          <span :class="['checkbox', { selected: showFullHistory }]" @click="toggleShowTruth">
-            <i v-if="showFullHistory" class="mdi mdi-check" />
-          </span>
-          <span>Navigate on this history</span>
-        </div>
+        <Checkbox @click="toggleShowTruth">Navigate on this history</Checkbox>
       </div>
       <div class="flex">
         <div class="flex flex-col text-white gap-1 my-6">
@@ -71,7 +66,8 @@ import useSnapshotStore from '@/stores/use-snapshot'
 import useProjectStore from '@/stores/use-project'
 import useUserStore from '@/stores/use-user'
 import { proxyApi } from '@/plugins/axios'
-import Table from '@/components/Table.vue'
+import Table from '@/components/tables/Table.vue'
+import Checkbox from '@/components/inputs/Checkbox.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -231,7 +227,6 @@ const columns = ref([
   {
     label: 'Snapshot',
     class: 'w-8 h-8',
-    type: 'img',
     src: (row) => `${proxyApi}${row.fullSrc}`
   }
 ])

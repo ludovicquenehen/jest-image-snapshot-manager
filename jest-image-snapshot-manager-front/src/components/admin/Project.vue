@@ -20,7 +20,7 @@
 <script setup>
 import useProjectStore from '@/stores/use-project'
 import useSnapshotStore from '@/stores/use-snapshot'
-import Table from '@/components/Table.vue'
+import Table from '@/components/tables/Table.vue'
 
 const projects = computed(() =>
   useProjectStore.projects.sort((a, b) => a.label.localeCompare(b.label))

@@ -44,6 +44,12 @@ export default class UsersController {
     return await Mails.reset(user, newPassword)
   }
 
+  async activate({ request }: HttpContext) {
+    const user = await User.findOrFail(request.param('id'))
+    user.active = !user.active
+    return await user.save()
+  }
+
   async get({ request }: HttpContext) {
     return await User.findOrFail(request.param('id'))
   }
