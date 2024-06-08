@@ -31,6 +31,10 @@ instance.interceptors.response.use(
       localStorage.setItem('auth_token', response.data?.token?.token)
     }
 
+		if (response.status === 400) {
+			return false
+		}
+
     return response
   },
   function (error) {
@@ -39,7 +43,7 @@ instance.interceptors.response.use(
     if (error.response.status === 401) {
       window.location = '/login'
     }
-    //return Promise.reject(error)
+    return Promise.reject(error)
   }
 )
 

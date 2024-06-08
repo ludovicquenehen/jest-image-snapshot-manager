@@ -15,15 +15,19 @@ export default reactive({
           .map((e) => e.truthId)
           .filter(Boolean)
         this.snapshots = this.snapshots.filter((e) => !e.archived || truthIds.includes(e.id))
-      } catch (err) {}
+      } catch (err) {
+        toast.error('Snapshots fetch error')
+      }
     }
   },
   async archive(snapshot) {
     try {
-      await api.put(`/snapshot/${snapshot.id}/archive`, {
-        ids: this.fullSnapshots.filter((e) => e.label === snapshot.label).map((e) => e.id)
-      })
-      toast.success('Snapshot archived successfully')
+      if (
+        await api.put(`/snapshot/${snapshot.id}/archive`, {
+          ids: this.fullSnapshots.filter((e) => e.label === snapshot.label).map((e) => e.id)
+        })
+      )
+        toast.success('Snapshot archived successfully')
       await this.fetch(true)
     } catch {
       toast.error('Archive snapshot error')
@@ -31,10 +35,12 @@ export default reactive({
   },
   async unarchive(snapshot) {
     try {
-      await api.put(`/snapshot/${snapshot.id}/unarchive`, {
-        ids: this.fullSnapshots.filter((e) => e.label === snapshot.label).map((e) => e.id)
-      })
-      toast.success('Snapshot restored successfully')
+      if (
+        await api.put(`/snapshot/${snapshot.id}/unarchive`, {
+          ids: this.fullSnapshots.filter((e) => e.label === snapshot.label).map((e) => e.id)
+        })
+      )
+        toast.success('Snapshot restored successfully')
       await this.fetch(true)
     } catch {
       toast.error('Unarchive snapshot error')
@@ -42,8 +48,8 @@ export default reactive({
   },
   async remove(snapshotId) {
     try {
-      await api.delete(`/snapshot/${snapshotId}`)
-      toast.success('Snapshot removed successfully')
+      if (await api.delete(`/snapshot/${snapshotId}`))
+        toast.success('Snapshot removed successfully')
       await this.fetch(true)
     } catch {
       toast.error('Remove snapshot error')

@@ -8,13 +8,14 @@ export default reactive({
     if (this.projects.length === 0 || force) {
       try {
         this.projects = (await api.get('/project'))?.data || []
-      } catch (err) {}
+      } catch (err) {
+        toast.error('Projects fetch error')
+      }
     }
   },
   async add(user) {
     try {
-      await api.put('/project', { ...user })
-      toast.success('Project added successfully')
+      if (await api.put('/project', { ...user })) toast.success('Project added successfully')
       await this.fetch(true)
     } catch {
       toast.error('Add project error')
@@ -22,8 +23,7 @@ export default reactive({
   },
   async remove(projectId) {
     try {
-      await api.delete(`/project/${projectId}`)
-      toast.success('Porject removed successfully')
+      if (await api.delete(`/project/${projectId}`)) toast.success('Porject removed successfully')
       await this.fetch(true)
     } catch {
       toast.error('Remove project error')
@@ -31,8 +31,8 @@ export default reactive({
   },
   async archive(project, version) {
     try {
-      await api.get(`project/${project}/archive/${version}`)
-      toast.success('Project archived successfully')
+      if (await api.get(`project/${project}/archive/${version}`))
+        toast.success('Project archived successfully')
       await this.fetch(true)
     } catch (err) {
       toast.error('Archive project version error')
@@ -40,8 +40,8 @@ export default reactive({
   },
   async unarchive(project, version) {
     try {
-      await api.get(`/project/${project}/unarchive/${version}`)
-      toast.success('Project unarchived successfully')
+      if (await api.get(`/project/${project}/unarchive/${version}`))
+        toast.success('Project unarchived successfully')
       await this.fetch(true)
     } catch {
       toast.error('Unarchive project version error')
