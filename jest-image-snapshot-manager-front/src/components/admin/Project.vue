@@ -75,9 +75,9 @@ const columns = ref([
             iconClass: 'mdi mdi-archive-arrow-down-outline',
             class: 'button-green w-16',
             disabled: (version, project) =>
-              useSnapshotStore.fullSnapshots.find(
-                (e) => e.projectId === project.id && e.version === version
-              ).archived,
+              useSnapshotStore.fullSnapshots
+                .filter((e) => e.projectId === project.id && e.version === version)
+                .every((e) => e.archived),
             action: (version, project) => archive(project.id, version)
           }
         },
@@ -87,23 +87,27 @@ const columns = ref([
             iconClass: 'mdi mdi-archive-arrow-up-outline',
             class: 'button-red w-16',
             disabled: (version, project) =>
-              !useSnapshotStore.fullSnapshots.find(
-                (e) => e.projectId === project.id && e.version === version
-              ).archived,
+              useSnapshotStore.fullSnapshots
+                .filter((e) => e.projectId === project.id && e.version === version)
+                .some((e) => !e.archived),
             action: (version, project) => unarchive(project.id, version)
           }
         }
       ]
     }
-  }
-  /*{
+  },
+  {
     class: 'w-32',
     command: {
       iconClass: 'mdi mdi-delete-outline',
       class: 'button-red w-32',
       action: (row) => useProjectStore.remove(row.id),
+      disabled: (row) =>
+        useSnapshotStore.fullSnapshots
+          .filter((e) => e.projectId === row.id)
+          .some((e) => !e.archived)
     }
-  }*/
+  }
 ])
 
 const archive = async (projectId, versionId) => {

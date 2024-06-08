@@ -5,6 +5,7 @@ import ConfirmAccount from '@/views/ConfirmAccount.vue'
 import ForgotPassword from '@/views/ForgotPassword.vue'
 import Snapshots from '@/views/Snapshots.vue'
 import Home from '@/views/Home.vue'
+import Flow from '@/views/Flow.vue'
 import Admin from '@/views/Admin.vue'
 import AdminUser from '@/components/admin/User.vue'
 import AdminProject from '@/components/admin/Project.vue'
@@ -39,6 +40,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Home
+    },
+		{
+      path: '/flow',
+      name: 'flow',
+      component: Flow
     },
     {
       path: '/snapshots',

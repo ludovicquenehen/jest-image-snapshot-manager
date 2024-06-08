@@ -26,10 +26,19 @@
         <div class="w-16 h-16 flex justify-center mt-4">
           <i
             :class="[
-              'mdi mdi-home-outline text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+              'mdi mdi-home text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
               { 'text-cyan-600': route.path === '/' }
             ]"
             @click="router.push('/')"
+          />
+        </div>
+        <div class="w-16 h-16 flex justify-center">
+          <i
+            :class="[
+              'mdi mdi-git text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+              { 'text-cyan-600': route.path === '/flow' }
+            ]"
+            @click="router.push('/flow')"
           />
         </div>
         <div class="w-16 h-16 flex justify-center">

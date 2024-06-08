@@ -160,168 +160,42 @@
 </template>
 <script setup>
 import { api, proxyApi } from '@/plugins/axios'
-import useProjectStore from '@/stores/use-project'
-import useSnapshotStore from '@/stores/use-snapshot'
 import useUserStore from '@/stores/use-user'
+import useSnapshotStore from '@/stores/use-snapshot'
 import useKeyboard from '@/composables/use-keyboard'
+import useSnapshotFilters from '@/composables/use-snapshot-filters'
 
 const router = useRouter()
-
-const STATUS = ['REQUEST', 'APPROVE', 'DECLINE', 'MERGE', 'CLOSE']
-
 const isAdmin = computed(() => useUserStore.user?.role === 'ADMIN')
 
-/** Snapshots & filters */
-const snapshots = computed(() => useSnapshotStore.snapshots)
-const filters = ref({
-  project: null,
-  version: null,
-  versionIteration: null,
-  status: ['REQUEST']
-})
-
-const projectList = computed(() =>
-  useProjectStore.projects.filter((e) =>
-    useUserStore.user?.projects?.map((p) => p.id).includes(e.id)
-  )
-)
-const versionList = computed(() => [
-  ...new Set(
-    snapshots.value
-      .filter((e) => e.projectId === filters.value.project && !e.archived)
-      .map((e) => e.version)
-  )
-])
-const versionIterationList = computed(() => [
-  ...new Set(
-    snapshots.value
-      .filter((e) => e.projectId === filters.value.project && e.version === filters.value.version)
-      .map((e) => e.versionIteration)
-  )
-])
-
-const computedSnapshots = computed(() => {
-  const { project, version, versionIteration } = filters.value
-  const filtered = snapshots.value.filter(
-    (e) =>
-      project === e.projectId && version === e.version && versionIteration === e.versionIteration
-  )
-
-  return filtered
-})
-
-const computedRequestCount = computed(
-  () => computedSnapshots.value.filter((e) => e.status === 'REQUEST').length
-)
-const computedApproveCount = computed(
-  () => computedSnapshots.value.filter((e) => e.status === 'APPROVE').length
-)
-const computedDeclineCount = computed(
-  () => computedSnapshots.value.filter((e) => e.status === 'DECLINE').length
-)
-const computedPendingCount = computed(() => computedApproveCount.value + computedDeclineCount.value)
-const computedMergedCount = computed(
-  () => computedSnapshots.value.filter((e) => e.status === 'MERGE').length
-)
-const computedClosedCount = computed(
-  () => computedSnapshots.value.filter((e) => e.status === 'CLOSE').length
-)
-
-const filteredSnapshots = computed(() => {
-  let filtered = computedSnapshots.value.filter((e) => filters.value.status.includes(e.status))
-  const labels = []
-  filtered = filtered.reduce((acc, obj) => {
-    if (!labels.includes(obj.age)) {
-      acc.push(obj)
-    }
-    return acc
-  }, [])
-  return filtered
-})
-
-const setFiltersStatus = (statusAlias) => {
-  const status = (statusAlias === 'PENDING' ? ['APPROVE', 'DECLINE'] : [statusAlias]).filter(
-    Boolean
-  )
-  status.forEach((e) => {
-    const index = filters.value.status.findIndex((s) => s === e)
-    if (index >= 0) {
-      filters.value.status.splice(index, 1)
-    } else {
-      filters.value.status.push(e)
-    }
-  })
-
-  // Unset empty filters
-  STATUS.forEach((e) => {
-    const index = filters.value.status.findIndex((s) => s === e)
-    if (index >= 0) {
-      if (e === 'REQUEST' && computedRequestCount.value === 0) {
-        filters.value.status.splice(index, 1)
-      }
-      if (e === 'APPROVE' && computedApproveCount.value === 0) {
-        filters.value.status.splice(index, 1)
-      }
-      if (e === 'DECLINE' && computedDeclineCount.value === 0) {
-        filters.value.status.splice(index, 1)
-      }
-      if (e === 'MERGE' && computedMergedCount.value === 0) {
-        filters.value.status.splice(index, 1)
-      }
-      if (e === 'CLOSE' && computedClosedCount.value === 0) {
-        filters.value.status.splice(index, 1)
-      }
-    }
-  })
-
-  useUserStore.setPreferences({ ...filters.value, currentSnapshot: model.value })
-}
-
 const vertical = ref(false)
+const snapshotImageWidth = computed(() =>
+  vertical.value ? `${window.innerWidth}px` : `${window.innerWidth / 2 - 120}px`
+)
 
-const refresh = async () => {
-  await useSnapshotStore.fetch(true)
-  versionIterationList.value = [...new Set(snapshots.value.map((e) => e.versionIteration))]
-}
-
-const handleFiltersChange = async () => {
-  setFiltersStatus([])
-  refreshFilters()
-  useUserStore.setPreferences({ ...filters.value, currentSnapshot: model.value })
-}
-
-const refreshFilters = async () => {
-  if (!filters.value.version || !versionList.value.includes(filters.value.version)) {
-    filters.value.version = versionList.value[versionList.value.length - 1]
-  }
-
-  if (
-    !filters.value.versionIteration ||
-    !versionIterationList.value.includes(filters.value.version)
-  ) {
-    filters.value.versionIteration =
-      versionIterationList.value[versionIterationList.value.length - 1]
-  }
-}
-
-onMounted(() => {
-  versionIterationList.value = [...new Set(snapshots.value.map((e) => e.versionIteration))]
-  filters.value.project = projectList.value[0]?.id
-  refreshFilters()
-  const preferences = useUserStore.getPreferences()
-  if (preferences) {
-    filters.value = preferences
-    model.value =
-      preferences.currentSnapshot < filteredSnapshots.value.length ? preferences.currentSnapshot : 0
-  }
-})
+/** Snapshots & filters */
+const {
+  model,
+  filters,
+  projectList,
+  versionList,
+  versionIterationList,
+  computedSnapshots,
+  computedRequestCount,
+  computedPendingCount,
+  computedMergedCount,
+  computedClosedCount,
+  filteredSnapshots,
+  refresh,
+  setFiltersStatus,
+  handleFiltersChange
+} = useSnapshotFilters(useSnapshotStore.snapshots)
 /** */
 
 /** Current & navigation */
-const model = ref(0)
 const current = computed(() => {
   const snapshot = filteredSnapshots.value[model.value] || filteredSnapshots.value[0]
-  return snapshot?.truthId ? snapshots.value.find((e) => e.id === snapshot.truthId) : snapshot
+  return snapshot?.truthId ? useSnapshotStore.snapshots.find((e) => e.id === snapshot.truthId) : snapshot
 })
 
 const received = computed(() => {
@@ -378,10 +252,6 @@ const merge = async () => {
   setFiltersStatus('MERGE')
 }
 /** */
-
-const snapshotImageWidth = computed(() =>
-  vertical.value ? `${window.innerWidth}px` : `${window.innerWidth / 2 - 120}px`
-)
 </script>
 
 <style scoped>
