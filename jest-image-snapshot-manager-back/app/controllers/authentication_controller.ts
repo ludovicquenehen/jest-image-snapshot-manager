@@ -5,6 +5,13 @@ export default class AuthController {
   async login({ request, response }: HttpContext) {
     const { email, password } = await request.body()
     const user = await User.verifyCredentials(email, password)
+
+    if (!user.active) {
+      {
+        return response.unauthorized({ message: 'Must confirm email' })
+      }
+    }
+
     const token = await User.accessTokens.create(user)
 
     return response.ok({

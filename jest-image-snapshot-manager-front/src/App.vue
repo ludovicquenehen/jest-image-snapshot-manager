@@ -88,7 +88,7 @@ const truths = computed(() => useSnapshotStore.snapshots.filter((e) => !!e.truth
 const loading = ref(true)
 onMounted(async () => {
   setTimeout(async () => {
-    if (!['/login', '/forgot-password'].includes(route.path)) {
+    if (!['/login', '/sign-in', '/confirm-account', '/forgot-password'].includes(route.path)) {
       await useUserStore.me()
       await useProjectStore.fetch(true)
       await useSnapshotStore.fetch(true)

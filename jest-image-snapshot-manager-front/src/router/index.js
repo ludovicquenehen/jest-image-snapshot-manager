@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/Login.vue'
-import ForgotPassword from '../views/ForgotPassword.vue'
+import SignIn from '@/views/SignIn.vue'
+import ConfirmAccount from '@/views/ConfirmAccount.vue'
+import ForgotPassword from '@/views/ForgotPassword.vue'
 import Snapshots from '@/views/Snapshots.vue'
 import Home from '@/views/Home.vue'
 import Admin from '@/views/Admin.vue'
@@ -17,6 +19,16 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/sign-in',
+      name: 'sign-in',
+      component: SignIn
+    },
+    {
+      path: '/confirm-account',
+      name: 'confirm-account',
+      component: ConfirmAccount
     },
     {
       path: '/forgot-password',

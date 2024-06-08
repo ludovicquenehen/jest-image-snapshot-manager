@@ -1,5 +1,4 @@
 import router from '@adonisjs/core/services/router'
-import AdminMiddleware from '../app/middleware/admin_middleware.js'
 import { middleware } from './kernel.js'
 const UserProjectsController = () => import('../app/controllers/user_projects_controller.js')
 const AuthenticationController = () => import('../app/controllers/authentication_controller.js')
@@ -12,13 +11,15 @@ router
   .group(() => {
     /** Authentication */
     router.post('login', [AuthenticationController, 'login'])
-    router.post('reset-password', [UsersController, 'resetPassword'])
     router.get('me', [AuthenticationController, 'me']).use(middleware.auth())
     router.get('logout', [AuthenticationController, 'logout']).use(middleware.auth())
 
     /** User */
-    router.get('users', [UsersController, 'index']).use(middleware.auth()).use(middleware.admin())
-    router.put('user', [UsersController, 'store']).use(middleware.auth()).use(middleware.admin())
+    router.post('sign-in', [UsersController, 'signIn'])
+    router.get('confirm-account/:email', [UsersController, 'confirmAccount']).as('confirmAccount')
+    router.post('reset-password', [UsersController, 'resetPassword'])
+    router.get('users', [UsersController, 'index']).use(middleware.auth())
+    router.put('user', [UsersController, 'invite']).use(middleware.auth()).use(middleware.admin())
     router
       .post('user/:id', [UsersController, 'update'])
       .use(middleware.auth())

@@ -1,4 +1,3 @@
-import env from '#start/env'
 import fs from 'node:fs'
 import Project from '../models/project.js'
 import Snapshot from '../models/snapshot.js'
@@ -16,7 +15,6 @@ const runCommand = async (command: any) => {
   }
 }
 
-//PENDING: créer un projet avec les scenarios pour tous les projets OU séparer sur chaque projet
 export default class Flow {
   static async getVersionIteration(project: Project, version: number) {
     const sameVersionIteration = await Snapshot.query()

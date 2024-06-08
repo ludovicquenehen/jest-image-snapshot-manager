@@ -16,6 +16,7 @@ export default class SnapshotsController {
   }
 
   async delete({ request }: HttpContext) {
+		//TODO: delete file
     const user = await Snapshot.findOrFail(request.param('id'))
     return await user.delete()
   }
@@ -71,14 +72,6 @@ export default class SnapshotsController {
         return await e.save()
       })
     )
-
-    // snapshot.archived = true
-    // const project = await Project.findOrFail(snapshot.projectId)
-    // const projectPath = env.get(`${project.env}_TESTS` as any)
-    // //KO:
-    // // await Files.unlink(`${projectPath}/__image_snapshots__/${snapshot.src}`)
-    // // await Files.unlink(`${projectPath}/__image_snapshots__/${snapshot.src}`)
-    // return await snapshot.save()
   }
 
   async unarchive({ request }: HttpContext) {

@@ -12,7 +12,7 @@
         class="button-green w-16"
         @click="useUserStore.add(form)"
       >
-        <i class="mdi mdi-plus" />
+        <i class="mdi mdi-send" />
       </button>
     </div>
 

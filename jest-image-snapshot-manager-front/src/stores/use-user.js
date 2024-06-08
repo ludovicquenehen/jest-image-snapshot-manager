@@ -72,7 +72,23 @@ export default reactive({
       toast.error('Leave project error')
     }
   },
-  async resetPassword(email) {
+  async signIn(form) {
+    try {
+      await api.post('/sign-in', form)
+    } catch {
+      toast.error('Error occured during mail sending')
+    }
+  },
+	async confirmAccount(hash) {
+		try {
+      await api.get(`/${hash}`)
+			toast.success('Account confirmed successfully')
+    } catch(error) {
+			console.log(error)
+      toast.error('Account confirmation error')
+    }
+	},
+	async resetPassword(email) {
     try {
       await api.post('/reset-password', { email })
       toast.success('Reset password successfully')

@@ -11,6 +11,7 @@
         <i class="mdi mdi-login" />
       </button>
       <div class="flex gap-4">
+        <RouterLink to="/sign-in" class="link text-xs"> Sign in </RouterLink>
         <RouterLink to="/forgot-password" class="link text-xs">
           Forgot password
         </RouterLink>
