@@ -47,56 +47,7 @@
           </div>
         </div>
       </div>
-      <div class="flex gap-4 p-4 pr-8 border-b-2 border-current">
-        <span class="w-8">ID</span>
-        <span class="w-16">Version</span>
-        <span class="w-16">Iteration</span>
-        <span class="w-32 text-center">Status</span>
-        <span class="w-64">Created date</span>
-        <span class="w-64">Validator</span>
-        <pan class="w-32"></pan>
-        <span class="w-8">Snapshot</span>
-      </div>
-      <div
-        v-for="line in history"
-        :class="[
-          'text-white p-4 border-b-2 border-current',
-          {
-            'bg-blue': line.id === +route.params.id,
-            'bg-green': !!line.truth,
-            'bg-blue-green': line.id === +route.params.id && !!line.truth
-          }
-        ]"
-        @click="goToLine(line.id)"
-      >
-        <div class="flex gap-4">
-          <span class="w-8">{{ line.id }}</span>
-          <span class="w-16 text-center">{{ line.version }}</span>
-          <span class="w-16 text-center">{{ line.versionIteration }}</span>
-          <span
-            :class="[
-              'w-32 text-center font-medium',
-              {
-                'text-plum': line.status === 'REQUEST',
-                'text-warning': ['APPROVE', 'DECLINE'].includes(line.status),
-                'text-green': line.status === 'MERGE',
-                'text-red': line.status === 'CLOSE'
-              }
-            ]"
-            >{{ ['APPROVE', 'DECLINE'].includes(line.status) ? 'PENDING' : line.status }}</span
-          >
-          <span class="w-64">{{ line.createdAt }}</span>
-          <span class="w-64">{{
-            useUserStore.users.find((e) => e.id === line.validatorId)?.id === useUserStore.user?.id
-              ? 'You'
-              : useUserStore.users.find((e) => e.id === line.validatorId)?.role === 'SYSTEM'
-                ? 'SYSTEM'
-                : useUserStore.users.find((e) => e.id === line.validatorId)?.email
-          }}</span>
-          <pan class="w-32 text-semibold text-warning">{{ line.archived ? 'ARCHIVED' : '' }}</pan>
-          <span class="w-8 h-8"><img :src="`${proxyApi}${line.fullSrc}`" /></span>
-        </div>
-      </div>
+      <Table :columns="columns" :rows="history" :rowClass="rowClass" :rowClick="rowClick" />
     </div>
     <div class="mt-44 ml-8">
       <img
@@ -120,6 +71,7 @@ import useSnapshotStore from '@/stores/use-snapshot'
 import useProjectStore from '@/stores/use-project'
 import useUserStore from '@/stores/use-user'
 import { proxyApi } from '@/plugins/axios'
+import Table from '@/components/Table.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -211,4 +163,76 @@ const goToSnapshot = (snapshot) => {
   })
   router.push('/')
 }
+
+const rowClass = (row) => [
+  'text-white p-4',
+  {
+    'bg-blue': row.id === +route.params.id,
+    'bg-green': !!row.truth,
+    'bg-blue-green': row.id === +route.params.id && !!row.truth
+  }
+]
+
+const rowClick = (row) => {
+  goToLine(row.id)
+}
+
+const columns = ref([
+  {
+    label: 'ID',
+    class: 'w-8',
+    field: 'id'
+  },
+  {
+    label: 'Version',
+    class: 'w-16',
+    field: 'version'
+  },
+  {
+    label: 'Iteration',
+    class: 'w-16',
+    field: 'versionIteration'
+  },
+  {
+    label: 'Status',
+    class: 'w-32 text-center',
+    rowClass: (row) => [
+      'w-32 text-center font-medium',
+      {
+        'text-plum': row.status === 'REQUEST',
+        'text-warning': ['APPROVE', 'DECLINE'].includes(row.status),
+        'text-green': row.status === 'MERGE',
+        'text-red': row.status === 'CLOSE'
+      }
+    ],
+    field: (row) => (['APPROVE', 'DECLINE'].includes(row.status) ? 'PENDING' : row.status)
+  },
+  {
+    label: 'Created at',
+    class: 'w-64',
+    field: 'createdAt'
+  },
+  {
+    label: 'Validator',
+    class: 'w-64',
+    field: 'createdAt',
+    field: (row) =>
+      useUserStore.users.find((e) => e.id === row.validatorId)?.id === useUserStore.user?.id
+        ? 'You'
+        : useUserStore.users.find((e) => e.id === row.validatorId)?.role === 'SYSTEM'
+          ? 'SYSTEM'
+          : useUserStore.users.find((e) => e.id === row.validatorId)?.email
+  },
+  {
+    class: 'w-32',
+    rowClass: 'w-32 text-warning font-semibold',
+    field: (row) => (row.archived ? 'ARCHIVED' : '')
+  },
+  {
+    label: 'Snapshot',
+    class: 'w-8 h-8',
+    type: 'img',
+    src: (row) => `${proxyApi}${row.fullSrc}`
+  }
+])
 </script>

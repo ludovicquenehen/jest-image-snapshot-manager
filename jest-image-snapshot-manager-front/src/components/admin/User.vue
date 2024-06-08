@@ -16,67 +16,13 @@
       </button>
     </div>
 
-    <div class="flex gap-4 p-4 pr-8 border-b-2 border-current">
-      <span class="w-8">ID</span>
-      <span class="w-64">Email</span>
-      <span class="w-32 text-center">Role</span>
-      <span>Projects</span>
-      <span class="w-32"></span>
-    </div>
-    <div v-for="user in users" class="text-white p-4 border-b-2 border-current">
-      <div class="flex gap-4 items-center">
-        <span class="w-8">{{ user.id }}</span>
-        <span class="w-64">{{ user.email }}</span>
-        <span
-          :class="[
-            'w-32 text-center font-semibold',
-            { 'text-warning': user.role === 'ADMIN', 'text-blum': user.role === 'USER' }
-          ]"
-          >{{ user.role }}</span
-        >
-        <span>
-          <div class="flex flex-col gap-1">
-            <div
-              v-for="project in useProjectStore.projects"
-              class="flex justify-between items-center"
-            >
-              <span class="w-64">{{ project.label }}</span>
-              <div class="flex gap-2">
-                <button
-                  :disabled="user.projects?.includes(project.id)"
-                  class="button-green w-16"
-                  @click="useUserStore.join(user.id, project.id)"
-                >
-								<i class="mdi mdi-location-enter" />
-                </button>
-                <button
-                  :disabled="!user.projects?.includes(project.id)"
-                  class="button-red w-16"
-                  @click="useUserStore.leave(user.id, project.id)"
-                >
-								<i class="mdi mdi-location-exit" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </span>
-        <span class="w-32 flex items-center">
-          <button
-            v-if="useUserStore.user.id !== user.id"
-            :disabled="user.projects.length"
-            class="button-red w-32"
-            @click="useUserStore.remove(user.id)"
-          >
-            <i class="mdi mdi-delete-outline" />
-          </button>
-        </span>
-      </div>
-    </div>
+    <Table :columns="columns" :rows="users" />
   </div>
 </template>
 <script setup>
 import useUserStore from '@/stores/use-user'
 import useProjectStore from '@/stores/use-project'
+import Table from '@/components/Table.vue'
 
 const users = computed(() =>
   useUserStore.users
@@ -89,4 +35,67 @@ const form = ref({
   email: '',
   role: ''
 })
+
+const columns = ref([
+  {
+    label: 'ID',
+    class: 'w-8',
+    field: 'id'
+  },
+  {
+    label: 'Email',
+    class: 'w-64',
+    field: 'email'
+  },
+  {
+    label: 'Role',
+    class: 'w-32 text-center',
+    rowClass: (row) => [
+      'w-32 text-center font-semibold',
+      { 'text-warning': row.role === 'ADMIN', 'text-blum': row.role === 'USER' }
+    ],
+    field: 'role'
+  },
+  {
+    label: 'Projects',
+    class: 'w-64',
+    list: {
+      rows: useProjectStore.projects,
+      columns: [
+        {
+          class: 'w-32',
+          field: 'label'
+        },
+        {
+          class: 'w-16',
+          command: {
+            iconClass: 'mdi mdi-location-enter',
+            class: 'button-green w-16',
+            disabled: (project, user) => user.projects?.includes(project.id),
+            action: (project, user) => useUserStore.join(user.id, project.id)
+          }
+        },
+        {
+          class: 'w-16',
+          command: {
+            iconClass: 'mdi mdi-location-exit',
+            class: 'button-red w-16',
+            disabled: (project, user) => !user.projects?.includes(project.id),
+            action: (project, user) => useUserStore.leave(user.id, project.id)
+          }
+        }
+      ]
+    }
+  },
+  {
+    class: 'w-32',
+    command: {
+      iconClass: 'mdi mdi-delete-outline',
+      hidden: (row) => useUserStore.user.id === row.id,
+      disabled: (row) => row.projects.length,
+      class: 'button-red w-32',
+      action: (row) => useUserStore.remove(row.id)
+    }
+  }
+])
 </script>
