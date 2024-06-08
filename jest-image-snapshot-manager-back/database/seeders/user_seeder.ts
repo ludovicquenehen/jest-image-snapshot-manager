@@ -11,6 +11,7 @@ export default class extends BaseSeeder {
       {
         email: 'admin@admin.com',
         role: 'ADMIN',
+        active: true,
       },
     ])
   }
