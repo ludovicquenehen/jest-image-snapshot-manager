@@ -1,14 +1,27 @@
 <template>
   <div v-if="!loading">
     <div v-if="useUserStore.user" class="flex items-center fixed right-10 gap-2">
-      <button class="button-red w-32 flex justify-center items-center" @click="logout">
+      <button
+        v-if="useUserStore.isAdmin"
+        class="button-warning w-10 flex justify-center items-center rounded-full"
+        @click="router.push('/admin')"
+      >
+        <i class="mdi mdi-shield-crown-outline" />
+      </button>
+      <button
+        class="button-action w-10 flex justify-center items-center rounded-full"
+        @click="router.push('/user')"
+      >
+        <i class="mdi mdi-account" />
+      </button>
+      <button class="button-red w-10 flex justify-center items-center rounded-full" @click="logout">
         <i class="mdi mdi-logout" />
       </button>
     </div>
     <div>
       <div
         v-if="useUserStore.user"
-        class="flex flex-col fixed top-[25%] left-5 gap-2 border-2 border-current rounded-lg"
+        class="flex flex-col fixed top-[30%] left-5 gap-2 border-2 border-current rounded-lg"
       >
         <div class="w-16 h-16 flex justify-center mt-4">
           <i
@@ -38,24 +51,6 @@
               { 'text-cyan-600': route.path.startsWith('/history') && !route.hash }
             ]"
             @click="router.push(`/history/${truths[0]?.id}`)"
-          />
-        </div>
-        <div class="w-16 h-16 flex justify-center">
-          <i
-            :class="[
-              'mdi mdi-account-outline text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-              { 'text-cyan-600': route.path === '/user' }
-            ]"
-            @click="router.push('/user')"
-          />
-        </div>
-        <div v-if="useUserStore.isAdmin" class="w-16 h-16 flex justify-center">
-          <i
-            :class="[
-              'mdi mdi-shield-crown-outline text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-              { 'text-cyan-600': route.path.startsWith('/admin') }
-            ]"
-            @click="router.push('/admin')"
           />
         </div>
       </div>

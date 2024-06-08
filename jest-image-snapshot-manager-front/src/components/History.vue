@@ -12,7 +12,7 @@
         >
           <i class="mdi mdi-chevron-left" />
         </button>
-        <span class="mx-4 text-white">{{ current + 1 }} / {{ truths.length }}</span>
+        <span class="mx-2 text-white">{{ current + 1 }} / {{ truths.length }}</span>
         <button
           :disabled="!next"
           class="paginate"
