@@ -12,9 +12,9 @@ export default class UsersController {
   }
 
   async invite({ request }: HttpContext) {
-    const { email } = request.body()
+    const { email, role } = request.body()
     const password = generateRandomString()
-    const user = await User.create({ email, password })
+    const user = await User.create({ email, password, role })
     const link = `${env.get('FRONT_BASE_URL')}/confirm-account#${router.makeSignedUrl('confirmAccount', { email: user.email })}`
     return await Mails.invite(user, link, password)
   }
