@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!hideColumns" class="flex gap-4 p-4 pr-8 border-b-2 border-current">
+    <div v-if="!hideColumns" class="md:flex hidden gap-4 p-4 pr-8 border-b-2 border-current">
       <span v-for="column in computedColumns" :class="column.class">{{ column.label }}</span>
     </div>
     <div
@@ -12,7 +12,7 @@
       ]"
       @click="rowClick ? rowClick(row, ...parentRows) : () => {}"
     >
-      <div class="flex gap-4 items-center">
+      <div class="flex md:flex-row flex-col gap-4 items-center">
         <span
           v-for="column in computedColumns"
           :class="
@@ -22,7 +22,9 @@
                 : column.rowClass
               : column.class
           "
+          class="md:inline flex justify-between sm-full"
         >
+          <span class="md:hidden inline">{{ column.label }}</span>
           <template
             v-if="!(typeof column.hidden === 'function' ? column.hidden(row) : column.hidden)"
           >
@@ -44,7 +46,7 @@
                     ? column.command.disabled(row)
                     : column.command.disabled
                 "
-                :class="column.command.class"
+                :class="[column.command.class, 'sm-full']"
                 @click="column.command.action(row)"
               >
                 <i :class="column.command.iconClass" />

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="useUserStore.user" class="flex items-center fixed right-10 gap-2">
+  <div v-if="useUserStore.user" class="flex items-center fixed right-10 gap-2 bg-current">
     <template v-for="item in items">
       <button
         v-if="!item.admin || useUserStore.isAdmin"
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup>
-import useUserStore from '@/stores/use-user'
+import useUserStore from '@/stores/use-user-store'
 
 defineProps({
   items: {

@@ -1,13 +1,13 @@
 <template>
-  <div class="w-fit">
+  <div class="md:w-fit">
     <div class="text-xl text-white mb-8">Projects</div>
-    <div class="flex gap-2 mt-4">
+    <div class="flex md:flew-row flex-col gap-2 mt-4">
       <input v-model="form.label" placeholder="Label" />
       <input v-model="form.path" placeholder="Project path" />
       <input v-model="form.pathTests" placeholder="Tests path" />
       <button
         :disabled="Object.values(form).some((e) => !e)"
-        class="button-green w-16"
+        class="button-green md:w-16"
         @click="useProjectStore.add(form)"
       >
         <i class="mdi mdi-plus" />
@@ -18,8 +18,8 @@
   </div>
 </template>
 <script setup>
-import useProjectStore from '@/stores/use-project'
-import useSnapshotStore from '@/stores/use-snapshot'
+import useProjectStore from '@/stores/use-project-store'
+import useSnapshotStore from '@/stores/use-snapshot-store'
 import Table from '@/components/tables/Table.vue'
 
 const projects = computed(() =>

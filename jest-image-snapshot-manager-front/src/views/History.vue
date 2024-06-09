@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <div class="w-fit">
+    <div class="md:w-fit">
       <button class="button-white mb-2 w-32" @click="router.go(-1)">
         <i class="mr-2 mdi mdi-arrow-left" />
       </button>
@@ -27,7 +27,7 @@
           <span><span class="font-medium">Project:</span> {{ history[0]?.projectLabel }}</span>
           <span><span class="font-medium">Snapshot:</span> {{ history[0]?.label }}</span>
         </div>
-        <div class="flex gap-8 mx-16 items-center">
+        <div class="flex md:flex-row flex-col md:gap-8 gap-1 mx-16 md:items-center">
           <div class="flex items-center gap-2">
             <span class="flex bg-blue h-8 w-20 border-2 border-white"></span>
             <span class="text-white font-semibold">Current</span>
@@ -44,16 +44,16 @@
       </div>
       <Table :columns="columns" :rows="history" :rowClass="rowClass" :rowClick="rowClick" />
     </div>
-    <div class="mt-44 ml-8">
+    <div class="md:inline hidden mt-44 ml-8">
       <img
         :src="`${proxyApi}${useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)?.fullSrc}`"
         :class="[
           'w-[600px] h-auto',
           {
             'cursor-pointer': !useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)
-              .archived,
+              ?.archived,
             'cursor-not-allowed': useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)
-              .archived
+              ?.archived
           }
         ]"
         @click="goToSnapshot(useSnapshotStore.snapshots.find((e) => e.id === +route.params.id))"
@@ -62,9 +62,9 @@
   </div>
 </template>
 <script setup>
-import useSnapshotStore from '@/stores/use-snapshot'
-import useProjectStore from '@/stores/use-project'
-import useUserStore from '@/stores/use-user'
+import useSnapshotStore from '@/stores/use-snapshot-store'
+import useProjectStore from '@/stores/use-project-store'
+import useUserStore from '@/stores/use-user-store'
 import { proxyApi } from '@/plugins/axios'
 import Table from '@/components/tables/Table.vue'
 import Checkbox from '@/components/inputs/Checkbox.vue'
@@ -173,61 +173,63 @@ const rowClick = (row) => {
   goToLine(row.id)
 }
 
-const columns = ref([
-  {
-    label: 'ID',
-    class: 'w-8',
-    field: 'id'
-  },
-  {
-    label: 'Version',
-    class: 'w-16',
-    field: 'version'
-  },
-  {
-    label: 'Iteration',
-    class: 'w-16',
-    field: 'versionIteration'
-  },
-  {
-    label: 'Status',
-    class: 'w-32 text-center',
-    rowClass: (row) => [
-      'w-32 text-center font-medium',
-      {
-        'text-plum': row.status === 'REQUEST',
-        'text-warning': ['APPROVE', 'DECLINE'].includes(row.status),
-        'text-green': row.status === 'MERGE',
-        'text-red': row.status === 'CLOSE'
-      }
-    ],
-    field: (row) => (['APPROVE', 'DECLINE'].includes(row.status) ? 'PENDING' : row.status)
-  },
-  {
-    label: 'Created at',
-    class: 'w-64',
-    field: 'createdAt'
-  },
-  {
-    label: 'Validator',
-    class: 'w-64',
-    field: 'createdAt',
-    field: (row) =>
-      useUserStore.users.find((e) => e.id === row.validatorId)?.id === useUserStore.user?.id
-        ? 'You'
-        : useUserStore.users.find((e) => e.id === row.validatorId)?.role === 'SYSTEM'
-          ? 'SYSTEM'
-          : useUserStore.users.find((e) => e.id === row.validatorId)?.email
-  },
-  {
-    class: 'w-32',
-    rowClass: 'w-32 text-warning font-semibold',
-    field: (row) => (row.archived ? 'ARCHIVED' : '')
-  },
-  {
-    label: 'Snapshot',
-    class: 'w-8 h-8',
-    src: (row) => `${proxyApi}${row.fullSrc}`
-  }
-])
+const columns = ref(
+  [
+    {
+      label: 'ID',
+      class: 'w-8',
+      field: 'id'
+    },
+    {
+      label: 'Version',
+      class: 'w-16',
+      field: 'version'
+    },
+    {
+      label: 'Iteration',
+      class: 'w-16',
+      field: 'versionIteration'
+    },
+    {
+      label: 'Status',
+      class: 'w-32 text-center',
+      rowClass: (row) => [
+        'w-32 text-center font-medium',
+        {
+          'text-plum': row.status === 'REQUEST',
+          'text-warning': ['APPROVE', 'DECLINE'].includes(row.status),
+          'text-green': row.status === 'MERGE',
+          'text-red': row.status === 'CLOSE'
+        }
+      ],
+      field: (row) => (['APPROVE', 'DECLINE'].includes(row.status) ? 'PENDING' : row.status)
+    },
+    {
+      label: 'Created at',
+      class: 'w-64',
+      field: 'createdAt'
+    },
+    {
+      label: 'Validator',
+      class: 'w-64',
+      field: 'createdAt',
+      field: (row) =>
+        useUserStore.users.find((e) => e.id === row.validatorId)?.id === useUserStore.user?.id
+          ? 'You'
+          : useUserStore.users.find((e) => e.id === row.validatorId)?.role === 'SYSTEM'
+            ? 'SYSTEM'
+            : useUserStore.users.find((e) => e.id === row.validatorId)?.email
+    },
+    {
+      class: 'w-32',
+      rowClass: 'w-32 text-warning font-semibold',
+      field: (row) => (row.archived ? 'ARCHIVED' : '')
+    },
+    window.innerWidth > 992 && {
+      label: 'Snapshot',
+      class: 'w-8 h-8',
+      src: (row) => `${proxyApi}${row.fullSrc}`
+    }
+  ].filter(Boolean)
+)
 </script>

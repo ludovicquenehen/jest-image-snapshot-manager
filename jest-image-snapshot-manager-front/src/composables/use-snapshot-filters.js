@@ -1,6 +1,6 @@
-import useProjectStore from '@/stores/use-project'
-import useSnapshotStore from '@/stores/use-snapshot'
-import useUserStore from '@/stores/use-user'
+import useProjectStore from '@/stores/use-project-store'
+import useSnapshotStore from '@/stores/use-snapshot-store'
+import useUserStore from '@/stores/use-user-store'
 
 const STATUS = ['REQUEST', 'APPROVE', 'DECLINE', 'MERGE', 'CLOSE']
 

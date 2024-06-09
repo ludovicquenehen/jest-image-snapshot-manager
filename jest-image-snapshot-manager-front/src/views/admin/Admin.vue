@@ -40,7 +40,7 @@
 </template>
 <script setup>
 import { RouterView } from 'vue-router'
-import useUserStore from '@/stores/use-user'
+import useUserStore from '@/stores/use-user-store'
 import { onMounted } from 'vue'
 
 const router = useRouter()

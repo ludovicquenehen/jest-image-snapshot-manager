@@ -1,11 +1,13 @@
 <template>
-  <div v-if="!passwordReset" class="flex justify-center mt-[10%]">
-    <div class="flex flex-col gap-2 w-1/6">
+  <div v-if="!passwordReset" class="flex justify-center md:mt-[10%] mt-[50%]">
+    <div class="flex flex-col gap-2 md:w-1/6 w-2/3">
       <input v-model="email" placeholder="Email" />
-      <button :disbled="!email" class="button-white" @click="resetPassword"><i class="mdi mdi-lock-reset" /></button>
+      <button :disbled="!email" class="button-white" @click="resetPassword">
+        <i class="mdi mdi-lock-reset" />
+      </button>
     </div>
   </div>
-	<div v-else class="flex flex-col text-center gap-8 mt-28">
+  <div v-else class="flex flex-col text-center gap-8 mt-28">
     <i class="mdi mdi-check-circle text-9xl text-green-500" />
     <span class="text-5xl text-bold">Congrats !</span>
     <span class="text-2xl font-semibold">
@@ -18,14 +20,14 @@
 </template>
 
 <script setup>
-import useUserStore from '@/stores/use-user'
+import useUserStore from '@/stores/use-user-store'
 
 const router = useRouter()
 const passwordReset = ref(false)
 const email = ref('')
 const resetPassword = async () => {
-	await useUserStore.resetPassword(email.value)
-	passwordReset.value = true
+  await useUserStore.resetPassword(email.value)
+  passwordReset.value = true
 }
 </script>
 

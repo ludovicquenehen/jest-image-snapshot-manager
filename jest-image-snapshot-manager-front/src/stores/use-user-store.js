@@ -1,5 +1,9 @@
 import { api } from '@/plugins/axios'
 import { useToast } from 'vue-toastification'
+import useAppStore from '@/stores/use-app-store'
+import useProjectStore from '@/stores/use-project-store'
+import useSnapshotStore from '@/stores/use-snapshot-store'
+
 const toast = useToast()
 
 export default reactive({
@@ -20,25 +24,28 @@ export default reactive({
   async me() {
     this.user = (await api.get('/me'))?.data || null
   },
-  async activate(id) {
-    try {
-      if (await api.get(`/activate/${id}`)) toast.success('User activated successfully')
-    } catch {
-      toast.error('User activation error')
-    }
-  },
   async login(form) {
     try {
-      if (await api.post('/login', { ...form })) toast.success('Logged in successfully')
-      this.me()
+      useAppStore.loading = true
+      setTimeout(async () => {
+        useAppStore.loading = false
+        if (await api.post('/login', { ...form })) toast.success('Logged in successfully')
+        this.me()
+        await useProjectStore.fetch(true)
+        await useSnapshotStore.fetch(true)
+      }, 1000)
     } catch {
       toast.error('Login error')
     }
   },
   async logout() {
     try {
-      if (await api.get('/logout')) toast.success('Logged out successfully')
-      this.user = null
+      useAppStore.loading = true
+      setTimeout(async () => {
+        if (await api.get('/logout')) toast.success('Logged out successfully')
+        this.user = null
+        useAppStore.loading = false
+      }, 1000)
     } catch {
       toast.error('Logout error')
     }
@@ -49,6 +56,14 @@ export default reactive({
       await this.fetch(true)
     } catch {
       toast.error('Add user error')
+    }
+  },
+	async update(user) {
+    try {
+      if (await api.post('/user', { ...user })) toast.success('User updated successfully')
+      await this.fetch(true)
+    } catch {
+      toast.error('Update user error')
     }
   },
   async remove(userId) {
@@ -79,14 +94,22 @@ export default reactive({
   },
   async signIn(form) {
     try {
-      await api.post('/sign-in', form)
+      useAppStore.loading = true
+      setTimeout(async () => {
+        if (await api.post('/sign-in', form)) toast.success('Email sent successfully')
+        useAppStore.loading = false
+      }, 1000)
     } catch {
       toast.error('Error occured during mail sending')
     }
   },
   async confirmAccount(hash) {
     try {
-      if (await api.get(`/${hash}`)) toast.success('Account confirmed successfully')
+      useAppStore.loading = true
+      setTimeout(async () => {
+        useAppStore.loading = false
+        if (await api.get(`/${hash}`)) toast.success('Account confirmed successfully')
+      }, 1000)
     } catch (error) {
       console.log(error)
       toast.error('Account confirmation error')
@@ -94,17 +117,25 @@ export default reactive({
   },
   async resetPassword(email) {
     try {
-      if (await api.post('/reset-password', { email })) toast.success('Reset password successfully')
+      useAppStore.loading = true
+      setTimeout(async () => {
+        if (await api.post('/reset-password', { email }))
+          toast.success('Reset password email sent successfully')
+        useAppStore.loading = false
+      }, 1000)
     } catch {
       toast.error('Reset password error')
     }
   },
   async changePassword(form) {
     try {
-      if (await api.post(`/user/${this.user.id}`, { password: form.new, email: this.user.email })) {
+      useAppStore.loading = true
+      setTimeout(async () => {
+        useAppStore.loading = false
+        if (await api.post(`/user/${this.user.id}`, { password: form.new, email: this.user.email }))
+          toast.success('Change password successfully')
         await this.logout()
-        toast.success('Change password successfully')
-      }
+      }, 1000)
     } catch {
       toast.error('Change Password error')
     }
@@ -112,7 +143,7 @@ export default reactive({
   setPreferences(preferences) {
     localStorage.setItem('preferences', JSON.stringify(preferences))
   },
-  getPreferences(preferences) {
+  getPreferences() {
     return localStorage.getItem('preferences')
       ? JSON.parse(localStorage.getItem('preferences'))
       : null

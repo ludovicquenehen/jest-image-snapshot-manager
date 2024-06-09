@@ -17,6 +17,80 @@
   font-weight: normal;
 }
 
+.loader {
+	position: absolute;
+  top: 30vh;
+  left: 45%;
+  width: 96px;
+  height: 96px;
+  border-style: solid solid dotted dotted;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotation 2s linear infinite;
+}
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border-style: solid solid dotted;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  animation: rotationBack 1s linear infinite;
+  transform-origin: center center;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+		border: 3px dotted #963484ff;
+  }
+	33% {
+    transform: rotate(120deg);
+		border: 3px dotted #f3b700ff;
+  }
+	67% {
+    transform: rotate(240deg);
+		border: 3px dotted #32e875ff;
+  }
+  100% {
+    transform: rotate(360deg);
+		border: 3px dotted #d62246ff;
+  }
+}
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+		border: 3px dotted #963484ff;
+  }
+	33% {
+    transform: rotate(-120deg);
+		border: 3px dotted #f3b700ff;
+  }
+	67% {
+    transform: rotate(-240deg);
+		border: 3px dotted #32e875ff;
+  }
+  100% {
+    transform: rotate(-
+		360deg);
+		border: 3px dotted #d62246ff;
+  }
+}
+
+@media screen and (max-width: 668px) {
+.sm-full {
+	width: 100%;
+}
+}
+
 .link {
   text-decoration: underline;
   color: var(--true-blue);
@@ -65,6 +139,10 @@ button {
 
 .checkbox.selected i {
   background: var(--deep-sky-blue);
+}
+
+.bg-current {
+	background: var(--color-background);
 }
 
 .bg-blue {

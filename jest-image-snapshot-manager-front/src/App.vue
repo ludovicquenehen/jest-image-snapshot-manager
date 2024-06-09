@@ -1,28 +1,25 @@
 <template>
-  <div v-if="!loading">
+  <div v-if="!useAppStore.loading">
     <Toolbar :items="toolbarItems" />
-    <div>
-      <div
-        v-if="useUserStore.user"
-        class="flex flex-col fixed top-[30%] left-5 gap-2 border-2 border-current rounded-lg"
-      >
-        <Navbar :items="navbarItems" />
-      </div>
-      <RouterView class="ml-24" />
-      <a
-        href="https://github.com/ludovicquenehen/jest-image-snapshot-manager"
-        class="fixed bottom-1 right-1 text-white text-xs"
-        >jest-image-snapshot-manager v{{ version }}</a
-      >
+    <Navbar :items="navbarItems" />
+    <div class="md:pl-24 max-h-[85vh] overflow-y-visible">
+      <RouterView />
     </div>
+    <a
+      href="https://github.com/ludovicquenehen/jest-image-snapshot-manager"
+      class="fixed bottom-1 right-1 text-white text-xs"
+      >jest-image-snapshot-manager v{{ version }}</a
+    >
   </div>
+  <span v-else class="loader"> </span>
 </template>
 <script setup>
 import { version } from '@/../package.json'
 import { RouterView } from 'vue-router'
-import useProjectStore from '@/stores/use-project'
-import useUserStore from '@/stores/use-user'
-import useSnapshotStore from '@/stores/use-snapshot'
+import useAppStore from '@/stores/use-app-store'
+import useProjectStore from '@/stores/use-project-store'
+import useUserStore from '@/stores/use-user-store'
+import useSnapshotStore from '@/stores/use-snapshot-store'
 import Navbar from '@/components/app/Navbar.vue'
 import Toolbar from '@/components/app/Toolbar.vue'
 
@@ -39,7 +36,7 @@ const truths = computed(() => useSnapshotStore.snapshots.filter((e) => !!e.truth
 const navbarItems = computed(() => [
   {
     iconClass: () => [
-      'mdi mdi-home text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+      'mdi mdi-view-dashboard text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
       { 'text-cyan-600': route.path === '/' }
     ],
     action: () => router.push('/')
@@ -86,16 +83,18 @@ const toolbarItems = ref([
   }
 ])
 
-const loading = ref(true)
 onMounted(async () => {
   setTimeout(async () => {
     if (!['/login', '/sign-in', '/confirm-account', '/forgot-password'].includes(route.path)) {
+      useAppStore.loading = true
       await useUserStore.me()
       await useProjectStore.fetch(true)
       await useSnapshotStore.fetch(true)
       await useUserStore.fetch(true)
     }
-    loading.value = false
+    setTimeout(() => {
+      useAppStore.loading = false
+    }, 1000)
   }, 10)
 })
 </script>

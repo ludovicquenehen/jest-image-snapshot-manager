@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center mt-[10%]">
-    <div class="flex flex-col gap-2 w-1/6">
+  <div class="flex justify-center md:mt-[10%] mt-[50%]">
+    <div class="flex flex-col gap-2 md:w-1/6 w-2/3">
       <input v-model="form.email" type="text" placeholder="Email" />
       <input v-model="form.password" type="password" placeholder="Password" />
       <button
@@ -10,20 +10,18 @@
       >
         <i class="mdi mdi-login" />
       </button>
-      <div class="flex gap-4">
-        <RouterLink to="/sign-in" class="link text-xs"> Sign in </RouterLink>
-        <RouterLink to="/forgot-password" class="link text-xs">
-          Forgot password
-        </RouterLink>
+      <div class="flex flex-col gap-2 mt-16">
+        <button class="button-action text-xs" @click="router.push('/sign-in')">Sign in</button>
+        <button class="button-action text-xs" @click="router.push('/forgot-password')">Reset password</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import useProjectStore from '@/stores/use-project'
-import useUserStore from '@/stores/use-user'
-import useSnapshotStore from '@/stores/use-snapshot'
+import useProjectStore from '@/stores/use-project-store'
+import useUserStore from '@/stores/use-user-store'
+import useSnapshotStore from '@/stores/use-snapshot-store'
 
 const router = useRouter()
 
@@ -34,8 +32,6 @@ const form = ref({
 
 const login = async () => {
   await useUserStore.login(form.value)
-  await useProjectStore.fetch(true)
-  await useSnapshotStore.fetch(true)
   router.push('/')
 }
 </script>

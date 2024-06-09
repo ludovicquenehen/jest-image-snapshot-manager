@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-xl text-white mb-8">Runners</div>
-    <div class="flex items-end gap-2">
+    <div class="flex md:flex-row flex-col md:items-end gap-2">
       <select v-model="project">
         <option disabled value="">Project</option>
         <option v-for="project in projectList" :value="project.id">{{ project.label }}</option>
@@ -11,10 +11,10 @@
         <option v-for="version in versionList" :value="version">{{ version }}</option>
       </select>
       <input v-model="newVersion" type="number" placeholder="New version" />
-      <button :disabled="disabledCommit" class="button-white w-16" @click="run('commit')">
+      <button :disabled="disabledCommit" class="button-white md:w-16" @click="run('commit')">
         <i class="mdi mdi-source-pull" />
       </button>
-      <button :disabled="disabledMerge" class="button-green w-16" @click="run('merge')">
+      <button :disabled="disabledMerge" class="button-green md:w-16" @click="run('merge')">
         <i class="mdi mdi-call-merge" />
       </button>
       <span v-if="currentProject?.commitInProgress || disabled" class="text-red text-semibold"
@@ -25,8 +25,8 @@
 </template>
 <script setup>
 import { api, proxyApi } from '@/plugins/axios'
-import useProjectStore from '@/stores/use-project'
-import useSnapshotStore from '@/stores/use-snapshot'
+import useProjectStore from '@/stores/use-project-store'
+import useSnapshotStore from '@/stores/use-snapshot-store'
 
 const newVersion = ref('')
 const project = ref('')

@@ -1,7 +1,7 @@
 <template>
-  <div class="w-fit">
+  <div class="md:w-fit ">
     <div class="text-xl text-white mb-8">Users</div>
-    <div class="flex gap-2 mt-4">
+    <div class="flex md:flew-row flex-col gap-2 mt-4 md:w-fit w-full">
       <input v-model="form.email" placeholder="Email" />
       <select v-model="form.role">
         <option disabled value="">Role</option>
@@ -9,7 +9,7 @@
       </select>
       <button
         :disabled="Object.values(form).some((e) => e === '')"
-        class="button-green w-16"
+        class="button-green md:w-16"
         @click="useUserStore.add(form)"
       >
         <i class="mdi mdi-send" />
@@ -20,11 +20,11 @@
   </div>
 </template>
 <script setup>
-import useUserStore from '@/stores/use-user'
-import useProjectStore from '@/stores/use-project'
+import useUserStore from '@/stores/use-user-store'
+import useProjectStore from '@/stores/use-project-store'
 import Table from '@/components/tables/Table.vue'
 import Checkbox from '@/components/inputs/Checkbox.vue'
-import useUser from '@/stores/use-user'
+import useUser from '@/stores/use-user-store'
 
 const users = computed(() =>
   useUserStore.users
@@ -51,7 +51,7 @@ const columns = ref([
       is: Checkbox,
       model: 'active',
       action: async (row) => {
-        await useUserStore.activate(row.id)
+        await useUserStore.update({ ...row, activate: !row.activate })
         await useUserStore.fetch(true)
       }
     }
@@ -84,7 +84,7 @@ const columns = ref([
           class: 'w-16',
           command: {
             iconClass: 'mdi mdi-location-enter',
-            class: 'button-green w-16',
+            class: 'button-green md:w-16 w-32',
             disabled: (project, user) => user.projects?.includes(project.id),
             action: (project, user) => useUserStore.join(user.id, project.id)
           }
@@ -93,7 +93,7 @@ const columns = ref([
           class: 'w-16',
           command: {
             iconClass: 'mdi mdi-location-exit',
-            class: 'button-red w-16',
+            class: 'button-red md:w-16 w-32',
             disabled: (project, user) => !user.projects?.includes(project.id),
             action: (project, user) => useUserStore.leave(user.id, project.id)
           }

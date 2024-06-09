@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '@/views/Login.vue'
-import SignIn from '@/views/SignIn.vue'
-import ConfirmAccount from '@/views/ConfirmAccount.vue'
-import ForgotPassword from '@/views/ForgotPassword.vue'
+import Login from '@/views/auth/Login.vue'
+import SignIn from '@/views/auth/SignIn.vue'
+import ConfirmAccount from '@/views/auth/ConfirmAccount.vue'
+import ForgotPassword from '@/views/auth/ForgotPassword.vue'
 import Snapshots from '@/views/Snapshots.vue'
 import Home from '@/views/Home.vue'
-import Flow from '@/views/Flow.vue'
-import Admin from '@/views/Admin.vue'
-import AdminUser from '@/components/admin/User.vue'
-import AdminProject from '@/components/admin/Project.vue'
-import AdminRunner from '@/components/admin/Runner.vue'
+import SnapshotCarousel from '@/views/SnapshotCarousel.vue'
+import Admin from '@/views/admin/Admin.vue'
+import AdminUser from '@/views/admin/User.vue'
+import AdminProject from '@/views/admin/Project.vue'
+import AdminRunner from '@/views/admin/Runner.vue'
 import User from '@/views/User.vue'
-import History from '@/components/History.vue'
+import History from '@/views/History.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,10 +41,10 @@ const router = createRouter({
       name: 'home',
       component: Home
     },
-		{
+    {
       path: '/flow',
       name: 'flow',
-      component: Flow
+      component: SnapshotCarousel
     },
     {
       path: '/snapshots',

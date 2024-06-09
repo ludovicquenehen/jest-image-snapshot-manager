@@ -3,17 +3,17 @@
     <button class="button-white mb-4 w-32" @click="router.push('/')">
       <i class="mr-2 mdi mdi-arrow-left" />
     </button>
-    <div class="w-fit">
+    <div class="md:w-fit">
       <div class="text-xl text-white mb-8">Snapshots</div>
       <Table :columns="columns" :rows="snapshots" />
     </div>
   </div>
 </template>
 <script setup>
-import useSnapshotStore from '@/stores/use-snapshot'
-import useUserStore from '@/stores/use-user'
+import useSnapshotStore from '@/stores/use-snapshot-store'
+import useUserStore from '@/stores/use-user-store'
 import Table from '@/components/tables/Table.vue'
-import useUser from '@/stores/use-user'
+import useUser from '@/stores/use-user-store'
 
 const router = useRouter()
 

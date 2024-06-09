@@ -1,6 +1,6 @@
 <template>
-  <div v-if="!signedIn" class="flex justify-center mt-[10%]">
-    <div class="flex flex-col gap-2 w-1/6">
+  <div v-if="!signedIn" class="flex justify-center md:mt-[10%] mt-[50%]">
+    <div class="flex flex-col gap-2 md:w-1/6 w-2/3">
       <input v-model="form.email" placeholder="Email" />
       <input v-model="form.password" type="password" placeholder="Password" />
       <input v-model="form.repeat" type="password" placeholder="Repeat" />
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import useUserStore from '@/stores/use-user'
+import useUserStore from '@/stores/use-user-store'
 
 const router = useRouter()
 const signedIn = ref(false)

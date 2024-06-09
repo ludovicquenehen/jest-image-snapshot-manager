@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="flex gap-16 mb-8">
+    <div class="flex md:flex-row flex-col md:gap-16 gap-2 mb-8">
       <div class="flex gap-2">
         <select v-model="filters.project" @change="handleFiltersChange">
           <option disabled value="">Project</option>
@@ -17,7 +17,7 @@
           </option>
         </select>
       </div>
-      <div v-if="computedSnapshots.length > 0" class="flex gap-4 text-xs text-white">
+      <div v-if="computedSnapshots.length > 0" class="flex md:gap-4 gap-2 text-xs text-white">
         <div
           :class="[
             'tag tag-white',
@@ -76,7 +76,7 @@
       <div class="flex justify-between my-4 h-8">
         <div class="flex">
           <div class="flex justify-between items-center gap-2">
-            <div>
+            <div class="md:inline md:w-48 w-36">
               <button :disabled="!previous" class="paginate" @click="navigate(-1)">
                 <i class="mdi mdi-chevron-left" />
               </button>
@@ -85,7 +85,7 @@
                 <i class="mdi mdi-chevron-right" />
               </button>
             </div>
-            <div>
+            <div class="md:inline flex">
               <button @click="vertical = !vertical" class="button-action mr-2 w-16">
                 <i class="mdi mdi-rotate-right-variant" />
               </button>
@@ -93,52 +93,49 @@
                 <i class="mdi mdi-vector-difference" />
               </button>
             </div>
-          </div>
-        </div>
-        <div class="flex justify-between">
-          <div v-if="current">
-            <button
-              class="button-white mr-2 w-16"
-              @click="router.push(`/history/${received ? received.id : current.id}#full`)"
-            >
-              <i class="mdi mdi-history" />
-            </button>
-            <template v-if="canApprove">
-              <button class="button-green w-36 mr-2" @click="approve">Approuver</button>
-              <button class="button-red w-36" @click="decline">Décliner</button>
-            </template>
-            <template v-else>
+            <div v-if="current" class="md:inline flex">
               <button
-                disabled
-                :class="[
-                  'mr-2 w-36',
-                  {
-                    'button-green': (received ? received : current)?.status === 'MERGE',
-                    'button-warning': ['APPROVE', 'DECLINE'].includes(
-                      (received ? received : current)?.status
-                    ),
-                    'button-red': (received ? received : current)?.status === 'CLOSE'
-                  }
-                ]"
+                class="button-white mr-2 w-16"
+                @click="router.push(`/history/${received ? received.id : current.id}#full`)"
               >
-                {{ (received ? received : current)?.status }}D
+                <i class="mdi mdi-history" />
               </button>
-              <button
-                v-if="
-                  isAdmin && !['MERGE', 'CLOSE'].includes((received ? received : current)?.status)
-                "
-                class="button-green w-36"
-                @click="merge"
-              >
-                MERGE
-              </button>
-            </template>
+              <template v-if="canApprove">
+                <button class="button-green w-36 mr-2" @click="approve">Approuver</button>
+                <button class="button-red w-36" @click="decline">Décliner</button>
+              </template>
+              <template v-else>
+                <button
+                  disabled
+                  :class="[
+                    'mr-2 w-36',
+                    {
+                      'button-green': (received ? received : current)?.status === 'MERGE',
+                      'button-warning': ['APPROVE', 'DECLINE'].includes(
+                        (received ? received : current)?.status
+                      ),
+                      'button-red': (received ? received : current)?.status === 'CLOSE'
+                    }
+                  ]"
+                >
+                  {{ (received ? received : current)?.status }}D
+                </button>
+                <button
+                  v-if="
+                    isAdmin && !['MERGE', 'CLOSE'].includes((received ? received : current)?.status)
+                  "
+                  class="button-green w-36"
+                  @click="merge"
+                >
+                  MERGE
+                </button>
+              </template>
+            </div>
           </div>
         </div>
       </div>
       <div :class="['flex item-center gap-4 w-full', { 'flex-col': vertical }]">
         <img :src="`${proxyApi}${current?.fullSrc}`" class="snapshot-image" />
-
         <div v-if="received">
           <img
             class="absolute hover:cursor-pointer snapshot-image"
@@ -160,15 +157,15 @@
 </template>
 <script setup>
 import { api, proxyApi } from '@/plugins/axios'
-import useUserStore from '@/stores/use-user'
-import useSnapshotStore from '@/stores/use-snapshot'
+import useUserStore from '@/stores/use-user-store'
+import useSnapshotStore from '@/stores/use-snapshot-store'
 import useKeyboard from '@/composables/use-keyboard'
 import useSnapshotFilters from '@/composables/use-snapshot-filters'
 
 const router = useRouter()
 const isAdmin = computed(() => useUserStore.user?.role === 'ADMIN')
 
-const vertical = ref(false)
+const vertical = ref(window.innerWidth < 992)
 const snapshotImageWidth = computed(() =>
   vertical.value ? `${window.innerWidth}px` : `${window.innerWidth / 2 - 120}px`
 )
@@ -195,7 +192,9 @@ const {
 /** Current & navigation */
 const current = computed(() => {
   const snapshot = filteredSnapshots.value[model.value] || filteredSnapshots.value[0]
-  return snapshot?.truthId ? useSnapshotStore.snapshots.find((e) => e.id === snapshot.truthId) : snapshot
+  return snapshot?.truthId
+    ? useSnapshotStore.snapshots.find((e) => e.id === snapshot.truthId)
+    : snapshot
 })
 
 const received = computed(() => {
@@ -255,9 +254,19 @@ const merge = async () => {
 </script>
 
 <style scoped>
-.snapshot-image {
-  height: auto;
-  width: v-bind(snapshotImageWidth);
-  max-width: 1024px;
+@media screen and (min-width: 992px) {
+  .snapshot-image {
+    height: auto;
+    width: v-bind(snapshotImageWidth);
+    max-width: 1024px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .snapshot-image {
+    height: auto;
+    width: 80vw;
+    max-width: 80vw;
+  }
 }
 </style>
