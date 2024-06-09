@@ -20,7 +20,9 @@
         >
           <i class="mdi mdi-chevron-right" />
         </button>
-        <Checkbox @click="toggleShowTruth">Navigate on this history</Checkbox>
+        <Checkbox :model-value="showFullHistory" @click="toggleShowTruth"
+          >Navigate on this history</Checkbox
+        >
       </div>
       <div class="flex">
         <div class="flex flex-col text-white gap-1 my-6">

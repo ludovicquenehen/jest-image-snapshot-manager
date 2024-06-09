@@ -1,13 +1,18 @@
 <template>
   <div>
-    <div v-if="!hideColumns" class="md:flex hidden gap-4 p-4 pr-8 border-b-2 border-current">
-      <span v-for="column in computedColumns" :class="column.class">{{ column.label }}</span>
+    <div
+      v-if="!hideColumns"
+      :class="['md:flex hidden gap-4 p-4 pr-8', { 'border-b-2 border-current': !hideBorders }]"
+    >
+      <template v-if="!hideColumns">
+        <span v-for="column in computedColumns" :class="column.class">{{ column.label }}</span>
+      </template>
     </div>
     <div
-      v-for="(row, index) in rows"
+      v-for="(row, index) in (typeof rows === 'function' ? rows(...parentRows) : rows)"
       :class="[
         'text-white p-4',
-        { 'border-b-2 border-current': !hideColumns },
+        { 'border-b-2 border-current': !hideBorders },
         typeof rowClass === 'function' ? rowClass(row, ...parentRows) : rowClass
       ]"
       @click="rowClick ? rowClick(row, ...parentRows) : () => {}"
@@ -55,12 +60,11 @@
             <template v-else-if="column.list">
               <Table
                 :parentRows="[row, ...(parentRows || [])]"
-                :hideColumns="true"
-                :columns="column.list.columns"
                 :rows="
                   typeof column.list.rows === 'function' ? column.list.rows(row) : column.list.rows
                 "
                 :rowClass="column.list.rowClass"
+                v-bind="column.list"
               />
             </template>
             <template v-else-if="column.src">
@@ -83,9 +87,6 @@
 <script setup>
 import Table from '@/components/tables/Table.vue'
 const props = defineProps({
-  hideColumns: {
-    type: Boolean
-  },
   columns: {
     type: Array,
     default: () => []
@@ -104,10 +105,16 @@ const props = defineProps({
   },
   rowClick: {
     type: Function
+  },
+  hideColumns: {
+    type: Boolean
+  },
+  hideBorders: {
+    type: Boolean
   }
 })
-const emit = defineEmits(['select', 'click'])
 
+const emit = defineEmits(['select', 'click'])
 const deepGet = (obj, keys) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
 const handleObject = (fld) => {
   const t = Object.entries(fld).reduce((acc, [k, v]) => {

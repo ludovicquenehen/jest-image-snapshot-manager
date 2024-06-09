@@ -19,9 +19,7 @@
 </template>
 
 <script setup>
-import useProjectStore from '@/stores/use-project-store'
 import useUserStore from '@/stores/use-user-store'
-import useSnapshotStore from '@/stores/use-snapshot-store'
 
 const router = useRouter()
 

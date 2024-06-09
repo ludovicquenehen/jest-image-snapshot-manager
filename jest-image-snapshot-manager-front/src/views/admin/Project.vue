@@ -1,7 +1,7 @@
 <template>
   <div class="md:w-fit">
     <div class="text-xl text-white mb-8">Projects</div>
-    <div class="flex md:flew-row flex-col gap-2 mt-4">
+    <div class="flex md:flex-row flex-col gap-2 mt-4">
       <input v-model="form.label" placeholder="Label" />
       <input v-model="form.path" placeholder="Project path" />
       <input v-model="form.pathTests" placeholder="Tests path" />
@@ -13,7 +13,6 @@
         <i class="mdi mdi-plus" />
       </button>
     </div>
-
     <Table :columns="columns" :rows="projects" />
   </div>
 </template>
@@ -58,6 +57,8 @@ const columns = ref([
     label: 'Version archive',
     class: 'w-64',
     list: {
+      hideColumns: true,
+      hideBorders: true,
       rows: (project) => [
         ...new Set(
           useSnapshotStore.fullSnapshots
