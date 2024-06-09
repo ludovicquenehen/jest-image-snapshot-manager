@@ -218,6 +218,11 @@ button.fill {
   color: #fff;
 }
 
+button.active {
+	background: #fff;
+	color: #000;
+}
+
 .text-plum {
   color: var(--plum);
 }

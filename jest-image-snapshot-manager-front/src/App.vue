@@ -2,7 +2,7 @@
   <div v-if="!useAppStore.loading">
     <Toolbar :items="toolbarItems" />
     <Navbar :items="navbarItems" />
-    <div class="md:pl-24 max-h-[85vh] overflow-y-visible">
+    <div class="md:pl-24 mb-[15%] overflow-y-visible">
       <RouterView />
     </div>
     <a

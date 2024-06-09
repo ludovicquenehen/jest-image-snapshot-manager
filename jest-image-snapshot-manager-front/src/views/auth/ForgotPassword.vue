@@ -11,7 +11,7 @@
     <i class="mdi mdi-check-circle text-9xl text-green-500" />
     <span class="text-5xl text-bold">Congrats !</span>
     <span class="text-2xl font-semibold">
-      You should have received an email to reset your password
+      You should have received an email with a new password
     </span>
     <button class="button-white w-48 mx-auto" @click="router.push('/login')">
       Return to login page

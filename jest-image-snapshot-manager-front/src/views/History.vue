@@ -159,7 +159,7 @@ const goToSnapshot = (snapshot) => {
     ...filters,
     currentSnapshot: currentIndex
   })
-  router.push('/')
+  router.push('/flow')
 }
 
 const rowClass = (row) => [
