@@ -19,8 +19,8 @@ app.get("/", (req, res) => {
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
+  host: "smtp.mailtrap.io",
+  port: 2525,
   auth: {
     user: process.env.SMTP_USER, // generated mailtrap user
     pass: process.env.SMTP_PASSWORD, // generated mailtrap password
