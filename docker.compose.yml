@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  jest-image-snapshot-manager-front:
+    image: jest-image-snapshot-manager-front:latest
+    environment:
+      PORT: 3000
+      PROXY_API: http://jest-image-snapshot-manager-back:8080/
+    ports:
+      - 3000:3000
+  jest-image-snapshot-manager-back:
+    image: jest-image-snapshot-manager-back:latest
+    environment:
+      TZ: UTC
+      PORT: 3333
+      LOG_LEVEL: info
+      APP_KEY: QswrAQatR7YDu0ohY9BehV14uZn0LCqS
+      ENV SQLITE_FILE: ./tmp/db.sqlite3
+    volumes:
+      - ./server:/server
+    ports:
+      - 3333:3333
