@@ -1,9 +1,7 @@
 <template>
   <div class="flex">
     <div class="md:w-fit">
-      <button class="button-white mb-2 w-32" @click="router.go(-1)">
-        <i class="mr-2 mdi mdi-arrow-left" />
-      </button>
+      <div class="text-xl text-white mb-8">History</div>
       <div class="flex items-center gap-2">
         <button
           :disabled="!previous"
@@ -46,7 +44,7 @@
       </div>
       <Table :columns="columns" :rows="history" :rowClass="rowClass" :rowClick="rowClick" />
     </div>
-    <div class="md:inline hidden mt-44 ml-8">
+    <div class="md:inline hidden mt-64 ml-8">
       <img
         :src="`${proxyApi}${useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)?.fullSrc}`"
         :class="[
@@ -213,7 +211,7 @@ const columns = ref(
     },
     {
       label: 'Validator',
-      class: 'w-64',
+      class: 'w-16',
       field: 'createdAt',
       field: (row) =>
         useUserStore.users.find((e) => e.id === row.validatorId)?.id === useUserStore.user?.id

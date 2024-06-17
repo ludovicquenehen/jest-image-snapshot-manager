@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="flex md:flex-row flex-col md:gap-16 gap-2 mb-8">
+    <div class="flex md:flex-row flex-col md:gap-16 gap-2 mb-4">
       <div class="flex gap-2">
         <select v-model="filters.project" @change="handleFiltersChange">
           <option disabled value="">Project</option>
@@ -16,6 +16,15 @@
             {{ versionIteration }}
           </option>
         </select>
+        <div class="md:inline md:w-48 w-36">
+          <button :disabled="!previous" class="paginate" @click="navigate(-1)">
+            <i class="mdi mdi-chevron-left" />
+          </button>
+          <span class="mx-4 text-white">{{ model + 1 }} / {{ filteredSnapshots.length }}</span>
+          <button :disabled="!next" class="paginate" @click="navigate(1)">
+            <i class="mdi mdi-chevron-right" />
+          </button>
+        </div>
       </div>
       <div v-if="computedSnapshots.length > 0" class="flex md:gap-4 gap-2 text-xs text-white">
         <div
@@ -73,29 +82,24 @@
     </div>
     <div v-if="filteredSnapshots.length > 0">
       <span class="text-white">{{ current?.label }}</span>
-      <div class="flex justify-between my-4 h-8">
-        <div class="flex">
-          <div class="flex justify-between items-center gap-2">
-            <div class="md:inline md:w-48 w-36">
-              <button :disabled="!previous" class="paginate" @click="navigate(-1)">
-                <i class="mdi mdi-chevron-left" />
-              </button>
-              <span class="mx-4 text-white">{{ model + 1 }} / {{ filteredSnapshots.length }}</span>
-              <button :disabled="!next" class="paginate" @click="navigate(1)">
-                <i class="mdi mdi-chevron-right" />
-              </button>
+      <div class="flex item-center gap-4 w-full">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <Cursor
+                v-model="cursor"
+                min="0"
+                :max="cursorMax"
+                :disabled="!received"
+                :width="snapshotImageWidth"
+              />
             </div>
-            <div class="md:inline flex">
-              <button @click="vertical = !vertical" class="button-action mr-2 w-16">
-                <i class="mdi mdi-rotate-right-variant" />
-              </button>
+            <div v-if="current" class="flex gap-2 ml-96">
               <button :disabled="!received" class="button-action w-16" @click="toggleDiff">
                 <i class="mdi mdi-vector-difference" />
               </button>
-            </div>
-            <div v-if="current" class="md:inline flex">
               <button
-                class="button-white mr-2 w-16"
+                class="button-white w-16"
                 @click="router.push(`/history/${received ? received.id : current.id}#full`)"
               >
                 <i class="mdi mdi-history" />
@@ -132,24 +136,31 @@
               </template>
             </div>
           </div>
+          <div v-if="received">
+            <img
+              class="absolute hover:cursor-pointer snapshot-image"
+              @click="toggleDiff"
+              :src="`${proxyApi}${current?.fullSrc}`"
+            />
+            <div class="absolute crop-container">
+              <img
+                ref="diff"
+                class="snapshot-image"
+                @click="toggleDiff"
+                :src="`${proxyApi}${received?.fullSrc}`"
+              />
+            </div>
+            <div class="absolute crop-container">
+              <img
+                v-if="showDiff"
+                class="mix-blend-multiply snapshot-image"
+                @click="toggleDiff"
+                :src="`${proxyApi}${received?.fullSrcDiff}`"
+              />
+            </div>
+          </div>
+          <img v-else :src="`${proxyApi}${current?.fullSrc}`" class="snapshot-image" />
         </div>
-      </div>
-      <div :class="['flex item-center gap-4 w-full', { 'flex-col': vertical }]">
-        <img :src="`${proxyApi}${current?.fullSrc}`" class="snapshot-image" />
-        <div v-if="received">
-          <img
-            class="absolute hover:cursor-pointer snapshot-image"
-            @click="toggleDiff"
-            :src="`${proxyApi}${received?.fullSrc}`"
-          />
-          <img
-            v-if="showDiff"
-            class="absolute mix-blend-multiply hover:cursor-pointer snapshot-image"
-            @click="toggleDiff"
-            :src="`${proxyApi}${received?.fullSrcDiff}`"
-          />
-        </div>
-        <img v-else :src="`${proxyApi}${current?.fullSrc}`" class="snapshot-image opacity-10" />
       </div>
     </div>
   </div>
@@ -161,14 +172,12 @@ import useUserStore from '@/stores/use-user-store'
 import useSnapshotStore from '@/stores/use-snapshot-store'
 import useKeyboard from '@/composables/use-keyboard'
 import useSnapshotFilters from '@/composables/use-snapshot-filters'
+import Cursor from '@/components/inputs/Cursor.vue'
 
 const router = useRouter()
 const isAdmin = computed(() => useUserStore.user?.role === 'ADMIN')
 
-const vertical = ref(window.innerWidth < 992)
-const snapshotImageWidth = computed(() =>
-  vertical.value ? `${window.innerWidth}px` : `${window.innerWidth / 2 - 120}px`
-)
+const snapshotImageWidth = computed(() => `${window.innerWidth / 2 - 100}px`)
 
 /** Snapshots & filters */
 const {
@@ -251,6 +260,14 @@ const merge = async () => {
   setFiltersStatus('MERGE')
 }
 /** */
+
+const diff = ref(null)
+const cursor = ref(0)
+const cursorMax = computed(() => diff.value?.getBoundingClientRect().width || 0)
+const computedCursor = computed(() => `${cursor.value}px`)
+const computedCursorBorder = computed(() =>
+  cursor.value > 0 && cursor.value < cursorMax.value ? '2px' : '0px'
+)
 </script>
 
 <style scoped>
@@ -268,5 +285,11 @@ const merge = async () => {
     width: 80vw;
     max-width: 80vw;
   }
+}
+
+.crop-container {
+  width: v-bind(computedCursor);
+  overflow: hidden;
+  border-right: v-bind(computedCursorBorder) solid red;
 }
 </style>

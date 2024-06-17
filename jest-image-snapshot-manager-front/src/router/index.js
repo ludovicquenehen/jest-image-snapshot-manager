@@ -5,7 +5,7 @@ import ConfirmAccount from '@/views/auth/ConfirmAccount.vue'
 import ForgotPassword from '@/views/auth/ForgotPassword.vue'
 import Snapshots from '@/views/Snapshots.vue'
 import Home from '@/views/Home.vue'
-import SnapshotCarousel from '@/views/SnapshotCarousel.vue'
+import Flow from '@/views/Flow.vue'
 import Admin from '@/views/admin/Admin.vue'
 import AdminUser from '@/views/admin/User.vue'
 import AdminProject from '@/views/admin/Project.vue'
@@ -44,7 +44,7 @@ const router = createRouter({
     {
       path: '/flow',
       name: 'flow',
-      component: SnapshotCarousel
+      component: Flow
     },
     {
       path: '/snapshots',

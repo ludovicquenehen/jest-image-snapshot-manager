@@ -27,16 +27,16 @@ export default reactive({
   async login(form) {
     try {
       useAppStore.loading = true
-      setTimeout(async () => {
-        useAppStore.loading = false
-        if (await api.post('/login', { ...form })) toast.success('Logged in successfully')
-        this.me()
-        await useProjectStore.fetch(true)
-        await useSnapshotStore.fetch(true)
-      }, 1000)
-    } catch {
+      if (await api.post('/login', { ...form })) toast.success('Logged in successfully')
+      this.me()
+      await useProjectStore.fetch(true)
+      await useSnapshotStore.fetch(true)
+      useAppStore.loading = false
+      return true
+    } catch (err) {
       toast.error('Login error')
     }
+    useAppStore.loading = false
   },
   async logout() {
     try {
@@ -58,7 +58,7 @@ export default reactive({
       toast.error('Add user error')
     }
   },
-	async update(user) {
+  async update(user) {
     try {
       if (await api.post('/user', { ...user })) toast.success('User updated successfully')
       await this.fetch(true)

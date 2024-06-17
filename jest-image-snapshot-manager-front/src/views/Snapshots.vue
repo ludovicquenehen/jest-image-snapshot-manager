@@ -1,12 +1,7 @@
 <template>
-  <div>
-    <button class="button-white mb-4 w-32" @click="router.push('/')">
-      <i class="mr-2 mdi mdi-arrow-left" />
-    </button>
-    <div class="md:w-fit">
-      <div class="text-xl text-white mb-8">Snapshots</div>
-      <Table :columns="columns" :rows="snapshots" />
-    </div>
+  <div class="md:w-fit">
+    <div class="text-xl text-white mb-8">Snapshots</div>
+    <Table :columns="columns" :rows="snapshots" />
   </div>
 </template>
 <script setup>
@@ -102,7 +97,7 @@ const columns = ref([
       disabled: (row) =>
         useSnapshotStore.fullSnapshots
           .filter((e) => e.projectId === row.projectId && e.label === row.label)
-          .some((e) => e.archived),
+          .some((e) => !e.archived),
       action: (row) => useSnapshotStore.remove(row)
     }
   }

@@ -1,8 +1,5 @@
 <template>
   <div class="md:w-fit">
-    <button class="button-white mb-4 w-32" @click="router.push('/')">
-      <i class="mr-2 mdi mdi-arrow-left" />
-    </button>
     <div class="text-xl text-white mb-8">Users</div>
     <div class="flex md:flex-row flex-col gap-2 mt-4">
       <input v-model="form.new" placeholder="New password" type="password" />

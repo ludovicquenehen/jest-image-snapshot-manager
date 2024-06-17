@@ -12,7 +12,9 @@
       </button>
       <div class="flex flex-col gap-2 mt-16">
         <button class="button-action text-xs" @click="router.push('/sign-in')">Sign in</button>
-        <button class="button-action text-xs" @click="router.push('/forgot-password')">Reset password</button>
+        <button class="button-action text-xs" @click="router.push('/forgot-password')">
+          Reset password
+        </button>
       </div>
     </div>
   </div>
@@ -29,7 +31,8 @@ const form = ref({
 })
 
 const login = async () => {
-  await useUserStore.login(form.value)
-  router.push('/')
+  if (await useUserStore.login(form.value)) {
+    router.push('/')
+  }
 }
 </script>

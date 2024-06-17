@@ -58,7 +58,7 @@ const navbarItems = computed(() => [
   {
     iconClass: () => [
       'mdi mdi-history text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-      { 'text-cyan-600': route.path.startsWith('/history') && !route.hash }
+      { 'text-cyan-600': route.path.startsWith('/history') }
     ],
     action: () => router.push(`/history/${truths.value[0]?.id}`)
   }

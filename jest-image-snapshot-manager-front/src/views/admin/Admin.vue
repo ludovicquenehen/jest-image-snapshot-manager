@@ -1,11 +1,6 @@
 <template>
   <div>
-    <button
-      class="button-white mb-4 w-32"
-      @click="router.push(route.path === '/admin' ? '/' : '/admin')"
-    >
-      <i class="mr-2 mdi mdi-arrow-left" />
-    </button>
+    <div class="text-xl text-white mb-8">Admin</div>
     <div class="flex">
       <div>
         <div class="flex gap-4 mb-8">

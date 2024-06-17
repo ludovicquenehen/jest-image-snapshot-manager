@@ -1,6 +1,7 @@
 <template>
   <div class="pt-4">
     <div class="flex items-center flex-col border-2 border-current rounded-xl w-32">
+			<div class="text-xl text-white">All statistics</div>
       <span class="text-plum font-semibold">
         REQUEST {{ useSnapshotsStore.snapshots.filter((s) => s.status === 'REQUEST').length }}
       </span>

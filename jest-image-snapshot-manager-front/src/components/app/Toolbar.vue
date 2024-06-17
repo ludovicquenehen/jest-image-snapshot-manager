@@ -1,5 +1,5 @@
 <template>
-  <div v-if="useUserStore.user" class="flex items-center fixed right-10 gap-2 bg-current">
+  <div v-if="useUserStore.user" class="flex items-center fixed right-10 top-7 gap-2 bg-current">
     <template v-for="item in items">
       <button
         v-if="!item.admin || useUserStore.isAdmin"
