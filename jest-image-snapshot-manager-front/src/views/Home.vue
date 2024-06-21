@@ -1,7 +1,7 @@
 <template>
-  <div class="pt-4">
+  <div v-if="useSnapshotsStore.snapshots.length > 0" class="pt-4">
     <div class="flex items-center flex-col border-2 border-current rounded-xl w-32">
-			<div class="text-xl text-white">All statistics</div>
+      <div class="text-xl text-white">All statistics</div>
       <span class="text-plum font-semibold">
         REQUEST {{ useSnapshotsStore.snapshots.filter((s) => s.status === 'REQUEST').length }}
       </span>
@@ -78,12 +78,38 @@
       </div>
     </div>
   </div>
+  <div v-else-if="!useUserStore.isAdmin" class="flex flex-col text-center gap-8 mt-28">
+    <i class="mdi mdi-emoticon-sad text-9xl text-orange-500" />
+    <span class="text-5xl text-bold">Sorry...</span>
+    <span class="text-2xl font-semibold">
+      You must contact your organization admin to add you to a project or run a first test
+    </span>
+    <button class="button-white w-48 mx-auto">
+      <a href="mailto:admin@admin.com">Contact admin</a>
+    </button>
+  </div>
+  <div v-else class="flex flex-col text-center gap-8 mt-28">
+    <i class="mdi mdi-check-circle text-9xl text-green-500" />
+    <span class="text-5xl text-bold">Welcome !</span>
+    <span class="text-2xl font-semibold">
+      You must configure a project and run a first test to start
+    </span>
+    <div class="flex md:flex-row flex-col justify-center items-center gap-2">
+      <button class="button-white w-48" @click="router.push('/admin/project')">
+        Create first project
+      </button>
+      <button class="button-white w-48" @click="router.push('/admin/runner')">
+        Run first test
+      </button>
+    </div>
+  </div>
 </template>
 <script setup>
 import useProjectStore from '@/stores/use-project-store'
 import useUserStore from '@/stores/use-user-store'
 import useSnapshotsStore from '@/stores/use-snapshot-store'
 
+const router = useRouter()
 const projects = computed(() =>
   useProjectStore.projects.map((e) => ({
     ...e,

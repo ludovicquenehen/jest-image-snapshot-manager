@@ -22,9 +22,8 @@
           >Navigate on this history</Checkbox
         >
       </div>
-      <div class="flex">
+      <div class="flex justify-between">
         <div class="flex flex-col text-white gap-1 my-6">
-          <span><span class="font-medium">Project:</span> {{ history[0]?.projectLabel }}</span>
           <span><span class="font-medium">Snapshot:</span> {{ history[0]?.label }}</span>
         </div>
         <div class="flex md:flex-row flex-col md:gap-8 gap-1 mx-16 md:items-center">
@@ -175,10 +174,10 @@ const rowClick = (row) => {
 
 const columns = ref(
   [
-    {
-      label: 'ID',
-      class: 'w-8',
-      field: 'id'
+		{
+      label: 'Projet',
+      class: 'w-16',
+      field: (row) => useProjectStore.projects.find(e => e.id === row.projectId)?.label
     },
     {
       label: 'Version',

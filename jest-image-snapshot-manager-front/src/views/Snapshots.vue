@@ -8,7 +8,6 @@
 import useSnapshotStore from '@/stores/use-snapshot-store'
 import useUserStore from '@/stores/use-user-store'
 import Table from '@/components/tables/Table.vue'
-import useUser from '@/stores/use-user-store'
 
 const router = useRouter()
 
@@ -25,11 +24,6 @@ const snapshots = computed(() => {
 })
 
 const columns = ref([
-  {
-    label: 'ID',
-    class: 'w-8',
-    field: 'id'
-  },
   {
     label: 'Label',
     class: 'w-64',
@@ -64,7 +58,7 @@ const columns = ref([
   },
   {
     class: 'w-16',
-    hidden: !useUser.isAdmin,
+    hidden: !useUserStore.isAdmin,
     command: {
       iconClass: 'mdi mdi-archive-arrow-down-outline',
       class: 'button-green w-16',
@@ -77,7 +71,7 @@ const columns = ref([
   },
   {
     class: 'w-16',
-    hidden: !useUser.isAdmin,
+    hidden: !useUserStore.isAdmin,
     command: {
       iconClass: 'mdi mdi-archive-arrow-up-outline',
       class: 'button-red w-16',
@@ -90,7 +84,7 @@ const columns = ref([
   },
   {
     class: 'w-32',
-    hidden: !useUser.isAdmin,
+    hidden: !useUserStore.isAdmin,
     command: {
       iconClass: 'mdi mdi-delete-outline',
       class: 'button-red w-32',
