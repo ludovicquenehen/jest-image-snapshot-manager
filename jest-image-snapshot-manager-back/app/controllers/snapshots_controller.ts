@@ -1,12 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Snapshot from '../models/snapshot.js'
 import { canValidateSnapshot } from '../abilities/user.js'
-import Files from '../services/files.js'
-import Project from '../models/project.js'
 
 export default class SnapshotsController {
-  async index() {
-    const snapshots = await Snapshot.query()
+  async index({ auth }: HttpContext) {
+    const snapshots = await Snapshot.query().where('organization', auth.user?.organization || '')
     return snapshots.map((e: Snapshot) => e.toJSON()) || []
   }
 
@@ -16,7 +14,7 @@ export default class SnapshotsController {
   }
 
   async delete({ request }: HttpContext) {
-		//TODO: delete file
+    //TODO: delete file
     const user = await Snapshot.findOrFail(request.param('id'))
     return await user.delete()
   }

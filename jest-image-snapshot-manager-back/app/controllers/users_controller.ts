@@ -4,24 +4,29 @@ import Mails from '../services/mails.js'
 import { Exception } from '@adonisjs/core/exceptions'
 import router from '@adonisjs/core/services/router'
 import env from '../../start/env.js'
+import { v4 as uuidv4 } from 'uuid'
 
 const generateRandomString = (length = 6) => Math.random().toString(20).substr(2, length)
 export default class UsersController {
-  async index() {
-    return await User.query().preload('projects')
+  async index({ auth }: HttpContext) {
+    return await User.query()
+      .where('organization', auth.user?.organization || '')
+      .preload('projects')
   }
 
-  async invite({ request }: HttpContext) {
+  async invite({ auth, request }: HttpContext) {
     const { email, role } = request.body()
     const password = generateRandomString()
-    const user = await User.create({ email, password, role })
+    const organization = auth.user?.organization
+    const user = await User.create({ organization, email, password, role })
     const link = `${env.get('FRONT_BASE_URL')}/confirm-account#${router.makeSignedUrl('confirmAccount', { email: user.email })}`
     return await Mails.invite(user, link, password)
   }
 
   async signIn({ request }: HttpContext) {
     const { email, password } = request.body()
-    const user = await User.create({ email, password })
+    const organization = uuidv4()
+    const user = await User.create({ organization, email, password, role: 'ADMIN' })
     const link = `${env.get('FRONT_BASE_URL')}/confirm-account#${router.makeSignedUrl('confirmAccount', { email: user.email })}`
     return await Mails.register(user, link)
   }

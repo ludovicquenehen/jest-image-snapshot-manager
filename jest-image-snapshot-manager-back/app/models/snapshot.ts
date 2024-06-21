@@ -3,12 +3,13 @@ import { BaseModel, beforeCreate, hasOne, column, computed } from '@adonisjs/luc
 import type { HasOne } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
 import Project from './project.js'
+import { v4 as uuidv4 } from 'uuid'
 
 type STATUS = 'REQUEST' | 'APPROVE' | 'DECLINE' | 'MERGE' | 'CLOSE'
 
 export default class Snapshot extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
 
   @column()
   declare version: number
@@ -74,6 +75,7 @@ export default class Snapshot extends BaseModel {
 
   @beforeCreate()
   static assignStatus(snapshot: Snapshot) {
+		snapshot.id = uuidv4();
     snapshot.status = 'REQUEST'
     snapshot.validatorId = 1
   }

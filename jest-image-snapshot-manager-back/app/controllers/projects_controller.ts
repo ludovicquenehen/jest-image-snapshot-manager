@@ -3,12 +3,12 @@ import Project from '../models/project.js'
 import Snapshot from '../models/snapshot.js'
 
 export default class ProjectsController {
-  async index() {
-    return await Project.all()
+  async index({ auth }: HttpContext) {
+    return await Project.findManyBy('organization', auth.user?.organization)
   }
 
-  async store({ request }: HttpContext) {
-    return await Project.create(request.body())
+  async store({ auth, request }: HttpContext) {
+    return await Project.create({ ...request.body(), organization: auth.user?.organization})
   }
 
   async delete({ request }: HttpContext) {
