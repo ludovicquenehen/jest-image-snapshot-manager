@@ -32,11 +32,6 @@ const form = ref({
 
 const columns = ref([
   {
-    label: 'ID',
-    class: 'w-8',
-    field: 'id'
-  },
-  {
     label: 'Label',
     class: 'w-64',
     field: 'label'

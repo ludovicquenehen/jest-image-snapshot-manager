@@ -1,5 +1,5 @@
 <template>
-  <div class="md:w-fit ">
+  <div class="md:w-fit">
     <div class="text-xl text-white mb-8">Users</div>
     <div class="flex md:flex-row flex-col gap-2 mt-4 md:w-fit w-full">
       <input v-model="form.email" placeholder="Email" />
@@ -39,13 +39,8 @@ const form = ref({
 
 const columns = ref([
   {
-    label: 'ID',
-    class: 'w-8',
-    field: 'id'
-  },
-  {
     label: 'Active',
-    class: 'w-16 flex justify-center',
+    class: 'flex justify-center',
     component: {
       is: Checkbox,
       model: 'active',
@@ -73,8 +68,8 @@ const columns = ref([
     label: 'Projects',
     class: 'w-64',
     list: {
-			hideColumns: true,
-			hideBorders: true,
+      hideColumns: true,
+      hideBorders: true,
       rows: useProjectStore.projects,
       columns: [
         {

@@ -6,6 +6,7 @@ import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import Project from './project.js'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import { v4 as uuidv4 } from 'uuid'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -20,6 +21,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare active: Boolean
+
+	@column()
+  declare organization: string
 
   @column()
   declare fullName: string | null
@@ -57,8 +61,8 @@ export default class User extends compose(BaseModel, AuthFinder) {
     tokenSecretLength: 40,
   })
 
-  @beforeCreate()
+	@beforeCreate()
   static async assignUuid(user: User) {
-    user.password = user.email
+		user.password = user.email;
   }
 }

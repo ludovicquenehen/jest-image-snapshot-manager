@@ -3,12 +3,16 @@ import { BaseModel, beforeCreate, hasOne, column, computed } from '@adonisjs/luc
 import type { HasOne } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
 import Project from './project.js'
+import { v4 as uuidv4 } from 'uuid'
 
 type STATUS = 'REQUEST' | 'APPROVE' | 'DECLINE' | 'MERGE' | 'CLOSE'
 
 export default class Snapshot extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
+
+	@column()
+  declare organization: string
 
   @column()
   declare version: number
@@ -26,7 +30,7 @@ export default class Snapshot extends BaseModel {
   declare validatorId: number
 
   @column()
-  declare truthId: number | null
+  declare truthId: string | null
 
   @hasOne(() => Project)
   declare project: HasOne<typeof Project>
@@ -40,13 +44,13 @@ export default class Snapshot extends BaseModel {
 
   @computed()
   get fullSrc() {
-    return `/snapshots/${this.projectId}/${this.version}/${this.versionIteration}/${this.src.replace('.png', '')}.png`
+    return `/snapshots/${this.organization}/${this.projectId}/${this.version}/${this.versionIteration}/${this.src}`
   }
 
   @computed()
   get fullSrcDiff() {
     return this.srcDiff
-      ? `/snapshots/${this.projectId}/${this.version}/${this.versionIteration}/${this.srcDiff.replace('.png', '')}.png`
+      ? `/snapshots/${this.organization}/${this.projectId}/${this.version}/${this.versionIteration}/${this.srcDiff}`
       : null
   }
 
@@ -74,7 +78,7 @@ export default class Snapshot extends BaseModel {
 
   @beforeCreate()
   static assignStatus(snapshot: Snapshot) {
-    snapshot.status = 'REQUEST'
+    snapshot.id = uuidv4()
     snapshot.validatorId = 1
   }
 }

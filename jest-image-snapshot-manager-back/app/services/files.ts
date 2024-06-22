@@ -33,23 +33,24 @@ export default class Files {
   }
 
   static async tidy(
+		organization: string,
     project: Project,
     version: number,
     versionIteration: number,
     newSnapshot: string[]
   ) {
-    const dirPath = `./public/snapshots/${project.id}/${version}/${versionIteration}/.`
+    const dirPath = `./public/snapshots/${organization}/${project.id}/${version}/${versionIteration}/.`
     this.createPath(dirPath)
     this.copy(newSnapshot, `./../${project.pathTests}/__image_snapshots__`, dirPath)
     this.move(`./../${project.pathTests}/__image_snapshots__/__received_output__`, dirPath)
     this.move(`./../${project.pathTests}/__image_snapshots__/__diff_output__`, dirPath)
   }
 
-  static async moveTruth(project: Project, version: number, versionIteration: number, src: string) {
+  static async moveTruth(organization: string,project: Project, version: number, versionIteration: number, src: string) {
     const destPath = `./../${project.pathTests}/__image_snapshots__/${src.replace('-received', '')}`
     await fs.unlinkSync(destPath)
     await fs.copyFileSync(
-      `./public/snapshots/${project.id}/${version}/${versionIteration}/${src}`,
+      `./public/snapshots/${organization}/${project.id}/${version}/${versionIteration}/${src}`,
       destPath
     )
   }

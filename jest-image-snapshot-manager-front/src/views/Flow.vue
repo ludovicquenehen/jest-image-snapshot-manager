@@ -84,7 +84,7 @@
       <span class="text-white">{{ current?.label }}</span>
       <div class="flex item-center gap-4 w-full">
         <div>
-          <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center mb-4">
             <div>
               <Cursor
                 v-model="cursor"
@@ -94,7 +94,7 @@
                 :width="snapshotImageWidth"
               />
             </div>
-            <div v-if="current" class="flex gap-2 ml-96">
+            <div v-if="current" class="flex gap-2 ml-32">
               <button :disabled="!received" class="button-action w-16" @click="toggleDiff">
                 <i class="mdi mdi-vector-difference" />
               </button>
@@ -110,6 +110,7 @@
               </template>
               <template v-else>
                 <button
+									v-if="(received ? received : current)?.status !== 'REQUEST'"
                   disabled
                   :class="[
                     'mr-2 w-36',
@@ -128,6 +129,7 @@
                   v-if="
                     isAdmin && !['MERGE', 'CLOSE'].includes((received ? received : current)?.status)
                   "
+									:disabled="(received ? received : current)?.status === 'MERGE'"
                   class="button-green w-36"
                   @click="merge"
                 >
@@ -138,13 +140,13 @@
           </div>
           <div v-if="received">
             <img
+							ref="snapshotImage"
               class="absolute hover:cursor-pointer snapshot-image"
               @click="toggleDiff"
               :src="`${proxyApi}${current?.fullSrc}`"
             />
             <div class="absolute crop-container">
               <img
-                ref="diff"
                 class="snapshot-image"
                 @click="toggleDiff"
                 :src="`${proxyApi}${received?.fullSrc}`"
@@ -159,7 +161,7 @@
               />
             </div>
           </div>
-          <img v-else :src="`${proxyApi}${current?.fullSrc}`" class="snapshot-image" />
+          <img v-else ref="snapshotImage" :src="`${proxyApi}${current?.fullSrc}`" class="snapshot-image" />
         </div>
       </div>
     </div>
@@ -177,7 +179,16 @@ import Cursor from '@/components/inputs/Cursor.vue'
 const router = useRouter()
 const isAdmin = computed(() => useUserStore.user?.role === 'ADMIN')
 
-const snapshotImageWidth = computed(() => `${window.innerWidth / 2 - 100}px`)
+/** Image dimension & Cursor */
+const snapshotImageWidth = computed(() => `${window.innerWidth / 2}px`)
+const snapshotImage = ref(null)
+const cursor = ref(0)
+const cursorMax = computed(() => snapshotImage.value?.getBoundingClientRect().width || 0)
+const computedCursor = computed(() => `${cursor.value}px`)
+const computedCursorBorder = computed(() =>
+  cursor.value > 0 && cursor.value < cursorMax.value ? '2px' : '0px'
+)
+/** */
 
 /** Snapshots & filters */
 const {
@@ -241,6 +252,7 @@ const showDiff = ref(true)
 const toggleDiff = () => (showDiff.value = !showDiff.value)
 /** */
 
+//TODO: move in store
 /** Flows */
 const approve = async () => {
   await api.post(`/snapshot/${received.value.id}/approve`, { truthId: current.value.id })
@@ -260,14 +272,6 @@ const merge = async () => {
   setFiltersStatus('MERGE')
 }
 /** */
-
-const diff = ref(null)
-const cursor = ref(0)
-const cursorMax = computed(() => diff.value?.getBoundingClientRect().width || 0)
-const computedCursor = computed(() => `${cursor.value}px`)
-const computedCursorBorder = computed(() =>
-  cursor.value > 0 && cursor.value < cursorMax.value ? '2px' : '0px'
-)
 </script>
 
 <style scoped>
@@ -275,7 +279,7 @@ const computedCursorBorder = computed(() =>
   .snapshot-image {
     height: auto;
     width: v-bind(snapshotImageWidth);
-    max-width: 1024px;
+		max-width: v-bind(snapshotImageWidth);
   }
 }
 

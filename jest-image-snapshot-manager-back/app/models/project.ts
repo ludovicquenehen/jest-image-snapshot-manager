@@ -7,6 +7,9 @@ export default class Project extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
+	@column()
+  declare organization: string
+
   @column()
   declare label: string
 

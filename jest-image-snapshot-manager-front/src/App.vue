@@ -1,7 +1,7 @@
 <template>
   <div v-if="!useAppStore.loading">
     <Toolbar :items="toolbarItems" />
-    <Navbar :items="navbarItems" />
+    <Navbar v-if="hasSnapshots" :items="navbarItems" />
     <div class="md:pl-24 mb-[15%] overflow-y-visible">
       <RouterView />
     </div>
@@ -32,6 +32,7 @@ const logout = async () => {
 }
 
 const truths = computed(() => useSnapshotStore.snapshots.filter((e) => !!e.truth))
+const hasSnapshots = computed(() => useSnapshotStore.snapshots?.length > 0)
 
 const navbarItems = computed(() => [
   {
