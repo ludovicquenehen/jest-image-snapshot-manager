@@ -20,6 +20,7 @@ import useAppStore from '@/stores/use-app-store'
 import useProjectStore from '@/stores/use-project-store'
 import useUserStore from '@/stores/use-user-store'
 import useSnapshotStore from '@/stores/use-snapshot-store'
+import useDeviceStore from '@/stores/use-device-store'
 import Navbar from '@/components/app/Navbar.vue'
 import Toolbar from '@/components/app/Toolbar.vue'
 
@@ -92,6 +93,7 @@ onMounted(async () => {
       await useProjectStore.fetch(true)
       await useSnapshotStore.fetch(true)
       await useUserStore.fetch(true)
+      await useDeviceStore.fetch(true)
     }
     setTimeout(() => {
       useAppStore.loading = false

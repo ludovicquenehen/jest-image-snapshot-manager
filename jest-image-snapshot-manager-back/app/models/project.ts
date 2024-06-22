@@ -1,13 +1,14 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
 import Snapshot from './snapshot.js'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
+import Device from './Device.js'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-	@column()
+  @column()
   declare organization: string
 
   @column()
@@ -33,4 +34,14 @@ export default class Project extends BaseModel {
 
   @hasMany(() => Snapshot)
   declare snapshots: HasMany<typeof Snapshot>
+
+  @manyToMany(() => Device, {
+    pivotTable: 'devices_projects',
+    localKey: 'id',
+    pivotForeignKey: 'project_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'device_id',
+    pivotTimestamps: true,
+  })
+  declare devices: ManyToMany<typeof Device>
 }

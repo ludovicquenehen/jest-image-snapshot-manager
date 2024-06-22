@@ -9,6 +9,7 @@ import Flow from '@/views/Flow.vue'
 import Admin from '@/views/admin/Admin.vue'
 import AdminUser from '@/views/admin/User.vue'
 import AdminProject from '@/views/admin/Project.vue'
+import AdminDevice from '@/views/admin/Device.vue'
 import AdminRunner from '@/views/admin/Runner.vue'
 import User from '@/views/User.vue'
 import History from '@/views/History.vue'
@@ -64,6 +65,10 @@ const router = createRouter({
         {
           path: 'user',
           component: AdminUser
+        },
+				{
+          path: 'device',
+          component: AdminDevice
         },
         {
           path: 'project',

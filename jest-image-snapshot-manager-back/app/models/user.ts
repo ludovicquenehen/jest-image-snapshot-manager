@@ -6,7 +6,6 @@ import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import Project from './project.js'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
-import { v4 as uuidv4 } from 'uuid'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],

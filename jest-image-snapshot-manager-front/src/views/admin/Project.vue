@@ -20,6 +20,7 @@
 import useProjectStore from '@/stores/use-project-store'
 import useSnapshotStore from '@/stores/use-snapshot-store'
 import Table from '@/components/tables/Table.vue'
+import useDeviceStore from '@/stores/use-device-store'
 
 const projects = computed(() =>
   useProjectStore.projects.sort((a, b) => a.label.localeCompare(b.label))
@@ -87,6 +88,42 @@ const columns = ref([
                 .filter((e) => e.projectId === project.id && e.version === version)
                 .some((e) => !e.archived),
             action: (version, project) => unarchive(project.id, version)
+          }
+        }
+      ]
+    }
+  },
+  {
+    label: 'Devices',
+    class: 'w-64',
+    list: {
+      hideColumns: true,
+      hideBorders: true,
+      rows: () => useDeviceStore.devices,
+      columns: [
+        {
+          class: 'w-32',
+          field: 'label'
+        },
+        {
+          class: 'w-16',
+          command: {
+            iconClass: 'mdi mdi-card',
+            class: 'button-green w-16',
+            disabled: (device, project) => {
+              console.log(project.devices, device.id)
+              return project.devices.map((e) => e.id).includes(device.id)
+            },
+            action: (device, project) => useDeviceStore.assign(device.id, project.id)
+          }
+        },
+        {
+          class: 'w-16',
+          command: {
+            iconClass: 'mdi mdi-card-off',
+            class: 'button-red w-16',
+            disabled: (device, project) => !project.devices.map((e) => e.id).includes(device.id),
+            action: (device, project) => useDeviceStore.unassign(device.id, project.id)
           }
         }
       ]
