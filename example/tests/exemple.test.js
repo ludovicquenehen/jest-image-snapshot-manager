@@ -3,7 +3,13 @@ import { toMatchImageSnapshot } from "jest-image-snapshot";
 const puppeteer = require("puppeteer");
 expect.extend({ toMatchImageSnapshot });
 
-const expectToMatchImageSnapshot = async (page) => {
+const expectToMatchImageSnapshot = async (page, height = 1080, width = 1920) => {
+	await page.setViewport({
+		width,
+		height,
+		deviceScaleFactor: 1,
+	});
+
 	const image = await page.screenshot();
 	return expect(image).toMatchImageSnapshot({
 		storeReceivedOnFailure: true,
@@ -31,3 +37,17 @@ test("google", async () => {
 	await page.goto(`https://google.com`);
 	await expectToMatchImageSnapshot(page);
 });
+
+/*test("google-md", async () => {
+	const browser = await puppeteer.launch();
+	const page = await browser.newPage();
+	await page.goto(`https://google.com`);
+	await expectToMatchImageSnapshot(page, 1280, 800);
+});
+
+test("google-sm", async () => {
+	const browser = await puppeteer.launch();
+	const page = await browser.newPage();
+	await page.goto(`https://google.com`);
+	await expectToMatchImageSnapshot(page, 896, 414);
+});*/

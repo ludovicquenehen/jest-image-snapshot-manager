@@ -26,7 +26,7 @@ export default class Flow {
     return (sameVersionIteration[0]?.versionIteration || 0) + 1
   }
 
-  static async commit(projectId: string, version: number) {
+  static async commit(organization: string, projectId: number, version: number) {
     const snapshots = {
       MERGE: [] as string[],
       RECEIVED: [] as string[],
@@ -70,15 +70,18 @@ export default class Flow {
       snapshots.MERGE.map(async (src) => {
         const label = src.replace('.png', '')
 
-        const findedTruth = await Snapshot.query().where('label', label).andWhere('truth', true)
+        const findedTruth = await Snapshot.query()
+          .where('organization', organization)
+          .andWhere('label', label)
+          .andWhere('truth', true)
 
         if (findedTruth.length > 0) {
           return null
         }
         newSnapshots.push(src)
 
-        //src = `${src.replace('.png', '')}-${version}-${versionIteration}.png`
         const snapshot = await Snapshot.create({
+          organization,
           version,
           versionIteration,
           src,
@@ -87,9 +90,9 @@ export default class Flow {
           truth: true,
           projectId: project.id,
           validatorId: admin.id,
+          status: 'MERGE',
         })
 
-        snapshot.status = 'MERGE'
         return await snapshot.save()
       }).filter(Boolean)
     )
@@ -98,30 +101,33 @@ export default class Flow {
       snapshots.RECEIVED.map(async (src) => {
         const label = src.replace('-received.png', '')
         const findedTruth = await Snapshot.query()
-          .where('label', label)
+          .where('organization', organization)
+          .andWhere('label', label)
           .andWhere('truth', true)
-          .limit(1)
+          .firstOrFail()
 
         const srcDiff = src.replace('-received.png', '-diff.png')
         const snapshot = await Snapshot.create({
+          organization,
           label,
           version,
           versionIteration,
           src,
           srcDiff,
-          truthId: findedTruth[0]?.id,
+          truthId: findedTruth.id,
           truth: false,
           projectId: project.id,
           validatorId: admin.id,
+          status: 'REQUEST',
         })
         return snapshot
       }).filter(Boolean)
     )
 
-    await Files.tidy(project, version, versionIteration, newSnapshots)
+    await Files.tidy(organization, project, version, versionIteration, newSnapshots)
   }
 
-  static async merge(projectId: string, version: number) {
+  static async merge(organization: string, projectId: string, version: number) {
     const project = await Project.findOrFail(projectId)
     const versionIteration = await this.getVersionIteration(project, version)
 
@@ -140,15 +146,16 @@ export default class Flow {
           .where('label', e.label)
           .where('truth', true)
           .andWhere('project_id', project.id)
-        truth[0].truth = false
-        await truth[0].save()
+					.firstOrFail()
+        truth.truth = false
+        await truth.save()
 
         let snapshot = await Snapshot.findOrFail(e.id)
         snapshot.status = 'MERGE'
         snapshot.truth = true
         await snapshot.save()
 
-        Files.moveTruth(project, version, versionIteration - 1, snapshot.src)
+        Files.moveTruth(organization, project, version, versionIteration - 1, snapshot.src)
       }),
       ...(closed as any).map(async (e: any) => {
         let snapshot = await Snapshot.findOrFail(e.id)

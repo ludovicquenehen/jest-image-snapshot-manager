@@ -94,11 +94,7 @@ export default reactive({
   },
   async signIn(form) {
     try {
-      useAppStore.loading = true
-      setTimeout(async () => {
-        if (await api.post('/sign-in', form)) toast.success('Email sent successfully')
-        useAppStore.loading = false
-      }, 1000)
+      if (await api.post('/sign-in', form)) toast.success('Email sent successfully')
     } catch {
       toast.error('Error occured during mail sending')
     }

@@ -11,6 +11,9 @@ export default class Snapshot extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
+	@column()
+  declare organization: string
+
   @column()
   declare version: number
 
@@ -27,7 +30,7 @@ export default class Snapshot extends BaseModel {
   declare validatorId: number
 
   @column()
-  declare truthId: number | null
+  declare truthId: string | null
 
   @hasOne(() => Project)
   declare project: HasOne<typeof Project>
@@ -41,13 +44,13 @@ export default class Snapshot extends BaseModel {
 
   @computed()
   get fullSrc() {
-    return `/snapshots/${this.projectId}/${this.version}/${this.versionIteration}/${this.src.replace('.png', '')}.png`
+    return `/snapshots/${this.organization}/${this.projectId}/${this.version}/${this.versionIteration}/${this.src}`
   }
 
   @computed()
   get fullSrcDiff() {
     return this.srcDiff
-      ? `/snapshots/${this.projectId}/${this.version}/${this.versionIteration}/${this.srcDiff.replace('.png', '')}.png`
+      ? `/snapshots/${this.organization}/${this.projectId}/${this.version}/${this.versionIteration}/${this.srcDiff}`
       : null
   }
 
@@ -75,8 +78,7 @@ export default class Snapshot extends BaseModel {
 
   @beforeCreate()
   static assignStatus(snapshot: Snapshot) {
-		snapshot.id = uuidv4();
-    snapshot.status = 'REQUEST'
+    snapshot.id = uuidv4()
     snapshot.validatorId = 1
   }
 }

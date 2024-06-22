@@ -1,10 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Snapshot from '../models/snapshot.js'
 import { canValidateSnapshot } from '../abilities/user.js'
+import Project from '../models/project.js'
 
 export default class SnapshotsController {
   async index({ auth }: HttpContext) {
-    const snapshots = await Snapshot.query().where('organization', auth.user?.organization || '')
+    const projectIds = (
+      await Project.query().where('organization', auth.user?.organization || '')
+    ).map((e) => e.toJSON().id)
+    const snapshots = await Snapshot.query().whereIn('projectId', projectIds)
     return snapshots.map((e: Snapshot) => e.toJSON()) || []
   }
 

@@ -37,6 +37,7 @@ const form = ref({
 })
 const signIn = async () => {
   await useUserStore.signIn(form.value)
+	console.log('here')
   signedIn.value = true
 }
 </script>

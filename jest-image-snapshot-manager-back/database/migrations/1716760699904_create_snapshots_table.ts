@@ -5,13 +5,14 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id')
+      table.string('id').notNullable()
+      table.string('organization').notNullable()
       table.integer('version').notNullable()
       table.integer('version_iteration').notNullable()
       table.string('label').notNullable()
       table.integer('validator_id').notNullable()
       table.integer('project_id').notNullable()
-      table.integer('truth_id').nullable()
+      table.string('truth_id').nullable()
       table.string('src').notNullable()
       table.string('src_diff')
       table.boolean('truth').defaultTo(false)

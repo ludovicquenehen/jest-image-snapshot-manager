@@ -1,12 +1,11 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import Snapshot from './snapshot.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import { v4 as uuidv4 } from 'uuid'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
 
 	@column()
   declare organization: string
@@ -34,9 +33,4 @@ export default class Project extends BaseModel {
 
   @hasMany(() => Snapshot)
   declare snapshots: HasMany<typeof Snapshot>
-
-	@beforeCreate()
-  static async assignUuid(project: Project) {
-    project.id = uuidv4();
-  }
 }

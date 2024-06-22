@@ -45,17 +45,17 @@
     </div>
     <div class="md:inline hidden mt-64 ml-8">
       <img
-        :src="`${proxyApi}${useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)?.fullSrc}`"
+        :src="`${proxyApi}${useSnapshotStore.snapshots.find((e) => e.id === route.params.id)?.fullSrc}`"
         :class="[
           'w-[600px] h-auto',
           {
-            'cursor-pointer': !useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)
+            'cursor-pointer': !useSnapshotStore.snapshots.find((e) => e.id === route.params.id)
               ?.archived,
-            'cursor-not-allowed': useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)
+            'cursor-not-allowed': useSnapshotStore.snapshots.find((e) => e.id === route.params.id)
               ?.archived
           }
         ]"
-        @click="goToSnapshot(useSnapshotStore.snapshots.find((e) => e.id === +route.params.id))"
+        @click="goToSnapshot(useSnapshotStore.snapshots.find((e) => e.id === route.params.id))"
       />
     </div>
   </div>
@@ -74,7 +74,7 @@ const route = useRoute()
 const showFullHistory = ref(false)
 const toggleShowTruth = () => {
   showFullHistory.value = !showFullHistory.value
-  const current = useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)
+  const current = useSnapshotStore.snapshots.find((e) => e.id === route.params.id)
   const truth = useSnapshotStore.snapshots.find((e) => !!e.truth && e.label === current.label)
   router.push(
     `/history/${showFullHistory.value ? current.id : truth.id}${showFullHistory.value ? '#full' : ''}`
@@ -91,17 +91,17 @@ onUpdated(() => {
 
 const full = computed(() => route.hash === '#full' || showFullHistory.value)
 const truths = computed(() => {
-  const current = useSnapshotStore.snapshots.find((e) => e.id === +route.params.id)
+  const current = useSnapshotStore.snapshots.find((e) => e.id === route.params.id)
   return useSnapshotStore.snapshots.filter((e) =>
     full.value ? e.label === current.label : !!e.truth
   )
 })
-const current = computed(() => truths.value.findIndex((e) => e.id === +route.params.id))
+const current = computed(() => truths.value.findIndex((e) => e.id === route.params.id))
 const previous = computed(() => truths.value[current.value - 1]?.id)
 const next = computed(() => truths.value[current.value + 1]?.id)
 const history = computed(() => {
   const current = useSnapshotStore.snapshots.find(
-    (e) => e.id === +route.params.id && (full.value || !!e.truth)
+    (e) => e.id === route.params.id && (full.value || !!e.truth)
   )
   return useSnapshotStore.snapshots
     .filter((e) => e.label === current?.label)
@@ -162,9 +162,9 @@ const goToSnapshot = (snapshot) => {
 const rowClass = (row) => [
   'text-white p-4',
   {
-    'bg-blue': row.id === +route.params.id,
+    'bg-blue': row.id === route.params.id,
     'bg-green': !!row.truth,
-    'bg-blue-green': row.id === +route.params.id && !!row.truth
+    'bg-blue-green': row.id === route.params.id && !!row.truth
   }
 ]
 

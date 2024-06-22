@@ -92,7 +92,7 @@ const columns = ref([
         useSnapshotStore.fullSnapshots
           .filter((e) => e.projectId === row.projectId && e.label === row.label)
           .some((e) => !e.archived),
-      action: (row) => useSnapshotStore.remove(row)
+      action: (row) => useSnapshotStore.remove(row.id)
     }
   }
 ])
