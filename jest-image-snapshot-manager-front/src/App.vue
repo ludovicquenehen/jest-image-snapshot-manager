@@ -34,44 +34,69 @@ const logout = async () => {
 const truths = computed(() => useSnapshotStore.snapshots.filter((e) => !!e.truth))
 const hasSnapshots = computed(() => useSnapshotStore.snapshots?.length > 0)
 
-const navbarItems = computed(() => [
-  {
-    iconClass: () => [
-      'mdi mdi-view-dashboard text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-      { 'text-cyan-600': route.path === '/' }
-    ],
-    action: () => router.push('/')
-  },
-  {
-    iconClass: () => [
-      'mdi mdi-git text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-      { 'text-cyan-600': route.path === '/flow' }
-    ],
-    action: () => router.push('/flow')
-  },
-  {
-    iconClass: () => [
-      'mdi mdi-monitor-screenshot text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-      { 'text-cyan-600': route.path === '/snapshots' }
-    ],
-    action: () => router.push('/snapshots')
-  },
-  {
-    iconClass: () => [
-      'mdi mdi-history text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
-      { 'text-cyan-600': route.path.startsWith('/history') }
-    ],
-    action: () => router.push(`/history/${truths.value[0]?.id}`)
-  }
-])
+const navbarItems = computed(() =>
+  [
+    {
+      iconClass: () => [
+        'mdi mdi-view-dashboard text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+        { 'text-cyan-600': route.path === '/' }
+      ],
+      action: () => router.push('/')
+    },
+    {
+      iconClass: () => [
+        'mdi mdi-git text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+        { 'text-cyan-600': route.path === '/flow' }
+      ],
+      action: () => router.push('/flow')
+    },
+    {
+      iconClass: () => [
+        'mdi mdi-monitor-screenshot text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+        { 'text-cyan-600': route.path === '/snapshots' }
+      ],
+      action: () => router.push('/snapshots')
+    },
+    {
+      iconClass: () => [
+        'mdi mdi-history text-4xl cursor-pointer hover:text-cyan-600 hover:text-5xl',
+        { 'text-cyan-600': route.path.startsWith('/history') }
+      ],
+      action: () => router.push(`/history/${truths.value[0]?.id}`)
+    },
+    { separator: true },
+    useUserStore.isAdmin && {
+      iconClass: () => [
+        'mdi mdi-shield-account text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
+        { 'text-orange-500': route.path.startsWith('/admin/user') }
+      ],
+      action: () => router.push('/admin/user')
+    },
+    useUserStore.isAdmin && {
+      iconClass: () => [
+        'mdi mdi-cellphone-link text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
+        { 'text-orange-500': route.path.startsWith('/admin/device') }
+      ],
+      action: () => router.push('/admin/device')
+    },
+    useUserStore.isAdmin && {
+      iconClass: () => [
+        'mdi mdi-sitemap-outline text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
+        { 'text-orange-500': route.path.startsWith('/admin/project') }
+      ],
+      action: () => router.push('/admin/project')
+    },
+    useUserStore.isAdmin && {
+      iconClass: () => [
+        'mdi mdi-test-tube text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
+        { 'text-orange-500': route.path.startsWith('/admin/runner') }
+      ],
+      action: () => router.push('/admin/runner')
+    }
+  ].filter(Boolean)
+)
 
 const toolbarItems = ref([
-  {
-    admin: true,
-    iconClass: 'mdi mdi-shield-crown-outline',
-    color: 'warning',
-    action: () => router.push('/admin')
-  },
   {
     iconClass: 'mdi mdi-account',
     color: 'action',

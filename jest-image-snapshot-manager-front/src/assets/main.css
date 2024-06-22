@@ -220,7 +220,7 @@ button.fill {
 
 button.active {
 	background: #fff;
-	color: #000;
+	color: #000 !important;
 }
 
 .text-plum {

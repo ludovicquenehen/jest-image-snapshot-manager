@@ -6,7 +6,6 @@ import ForgotPassword from '@/views/auth/ForgotPassword.vue'
 import Snapshots from '@/views/Snapshots.vue'
 import Home from '@/views/Home.vue'
 import Flow from '@/views/Flow.vue'
-import Admin from '@/views/admin/Admin.vue'
 import AdminUser from '@/views/admin/User.vue'
 import AdminProject from '@/views/admin/Project.vue'
 import AdminRunner from '@/views/admin/Runner.vue'
@@ -59,7 +58,6 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      component: Admin,
       children: [
         {
           path: 'user',
