@@ -29,6 +29,7 @@
 import useUserStore from '@/stores/use-user-store'
 
 const router = useRouter()
+const route = useRoute()
 const signedIn = ref(false)
 const form = ref({
   email: '',
@@ -36,7 +37,8 @@ const form = ref({
   repeat: ''
 })
 const signIn = async () => {
-  await useUserStore.signIn(form.value)
+	delete form.value.repeat
+  await useUserStore.signIn({ ...form.value, organization: route.params.id})
   signedIn.value = true
 }
 </script>

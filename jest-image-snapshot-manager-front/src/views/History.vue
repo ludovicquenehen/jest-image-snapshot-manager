@@ -43,7 +43,7 @@
       </div>
       <Table :columns="columns" :rows="history" :rowClass="rowClass" :rowClick="rowClick" />
     </div>
-    <div class="md:inline hidden mt-64 ml-8">
+    <!-- <div class="md:inline hidden mt-64 ml-8">
       <img
         :src="`${proxyApi}${useSnapshotStore.snapshots.find((e) => e.id === route.params.id)?.fullSrc}`"
         :class="[
@@ -57,7 +57,7 @@
         ]"
         @click="goToSnapshot(useSnapshotStore.snapshots.find((e) => e.id === route.params.id))"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 <script setup>

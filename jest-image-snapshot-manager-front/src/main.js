@@ -10,6 +10,7 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
 const app = createApp(App)
+app.config.globalProperties.$baseUrl = import.meta.env.VITE_BASE_URL;
 app.use(router)
 app.use(Toast);
 app.mount('#app')

@@ -1,7 +1,7 @@
 <template>
   <div v-if="!useAppStore.loading">
     <Toolbar :items="toolbarItems" />
-    <Navbar :items="navbarItems" />
+    <Navbar v-if="hasSnapshots" :items="navbarItems" />
     <div class="md:pl-24 mb-[15%] overflow-y-visible">
       <RouterView />
     </div>
@@ -34,7 +34,6 @@ const logout = async () => {
 
 const truths = computed(() => useSnapshotStore.snapshots.filter((e) => !!e.truth))
 const hasSnapshots = computed(() => useSnapshotStore.snapshots?.length > 0)
-
 const navbarItems = computed(() =>
   [
     {
@@ -65,7 +64,7 @@ const navbarItems = computed(() =>
       ],
       action: () => router.push(`/history/${truths.value[0]?.id}`)
     },
-    { separator: true },
+    useUserStore.isAdmin && { separator: true },
     useUserStore.isAdmin && {
       iconClass: () => [
         'mdi mdi-shield-account text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',

@@ -78,27 +78,30 @@
           min="0"
           max="100"
           :disabled="!devices[device].current"
-          :width="snapshotImageWidthPx"
+          :width="device !== 'null' ? '15vw' : snapshotImageWidthPx"
         />
         <div class="flex w-full">
           <div v-if="devices[device].current">
             <img
               :id="`${devices[device].label}${device ? device : ''}`"
-              class="absolute hover:cursor-pointer snapshot-image"
+              :class="[
+                'absolute hover:cursor-pointer snapshot-image',
+                { device: device !== 'null' }
+              ]"
               @click="toggleDiff"
               :src="`${proxyApi}${devices[device]?.fullSrc}`"
             />
-            <div class="absolute crop-container">
+            <div :class="['absolute crop-container', { device: device !== 'null' }]">
               <img
-                class="snapshot-image"
+                :class="['snapshot-image', { device: device !== 'null' }]"
                 @click="toggleDiff"
                 :src="`${proxyApi}${devices[device].current.fullSrc}`"
               />
             </div>
-            <div class="absolute crop-container">
+            <div :class="['absolute crop-container', { device: device !== 'null' }]">
               <img
                 v-if="showDiff"
-                class="mix-blend-multiply snapshot-image"
+                :class="['mix-blend-multiply snapshot-image', { device: device !== 'null' }]"
                 @click="toggleDiff"
                 :src="`${proxyApi}${devices[device].fullSrcDiff}`"
               />
@@ -106,9 +109,9 @@
           </div>
           <img
             v-else
-            :id="`${devices[device]?.label}-${device ? device : ''}`"
+            :id="`${devices[device]?.label}-${device !== 'null' ? device : ''}`"
             :src="`${proxyApi}${devices[device]?.fullSrc}`"
-            :class="['snapshot-image', { device: !!device }]"
+            :class="['snapshot-image', { device: device !== 'null' }]"
           />
         </div>
       </div>
@@ -164,6 +167,7 @@ const snapshotImageWidth = computed(() => window.innerWidth / 2)
 const snapshotImageWidthPx = computed(() => `${snapshotImageWidth.value}px`)
 const cursor = ref(0)
 const computedCursor = computed(() => `${(cursor.value * snapshotImageWidth.value) / 100}px`)
+const computedCursorDevice = computed(() => `${(cursor.value * (window.innerWidth * 0.15)) / 100}px`)
 /** */
 </script>
 
@@ -173,6 +177,12 @@ const computedCursor = computed(() => `${(cursor.value * snapshotImageWidth.valu
     height: auto;
     width: v-bind(snapshotImageWidthPx);
     max-width: v-bind(snapshotImageWidthPx);
+  }
+
+  .snapshot-image.device {
+    height: auto;
+    width: 15vw;
+    max-width: 15vw;
   }
 }
 
@@ -186,6 +196,12 @@ const computedCursor = computed(() => `${(cursor.value * snapshotImageWidth.valu
 
 .crop-container {
   width: v-bind(computedCursor);
+  overflow: hidden;
+  border-right: 2px solid red;
+}
+
+.crop-container.device {
+  width: v-bind(computedCursorDevice);
   overflow: hidden;
   border-right: 2px solid red;
 }

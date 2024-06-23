@@ -17,15 +17,17 @@
           </option>
         </select>
         <div class="md:inline md:w-48 w-36">
-          <button :disabled="!previous" class="paginate" @click="navigate(-1)">
-            <i class="mdi mdi-chevron-left" />
-          </button>
-          <span class="mx-4 text-white"
-            >{{ model + 1 }} / {{ Object.keys(groupedSnapshots).length }}</span
-          >
-          <button :disabled="!next" class="paginate" @click="navigate(1)">
-            <i class="mdi mdi-chevron-right" />
-          </button>
+          <template v-if="computedSnapshots.length > 0">
+            <button :disabled="!previous" class="paginate" @click="navigate(-1)">
+              <i class="mdi mdi-chevron-left" />
+            </button>
+            <span class="mx-4 text-white"
+              >{{ model + 1 }} / {{ Object.keys(groupedSnapshots).length }}</span
+            >
+            <button :disabled="!next" class="paginate" @click="navigate(1)">
+              <i class="mdi mdi-chevron-right" />
+            </button>
+          </template>
         </div>
       </div>
       <div class="flex md:gap-4 gap-2 text-xs text-white">
@@ -90,9 +92,7 @@
       />
     </div>
   </div>
-  <span v-if="Object.keys(groupedSnapshots).length === 0" class="text-2xl ml-8 mt-[15%]"
-    >Aucun snapshot</span
-  >
+  <span v-if="computedSnapshots.length === 0" class="text-2xl ml-8 mt-[15%]">Aucun snapshot</span>
 </template>
 <script setup>
 import useSnapshotStore from '@/stores/use-snapshot-store'

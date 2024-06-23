@@ -24,9 +24,9 @@ export default class UsersController {
   }
 
   async signIn({ request }: HttpContext) {
-    const { email, password } = request.body()
-    const organization = uuidv4()
-    const user = await User.create({ organization, email, password, role: 'ADMIN' })
+    const { organization } = request.body()
+    const newOrganization = uuidv4()
+    const user = await User.create({ organization: newOrganization, ...request.body(), role: organization ? 'USER' : 'ADMIN' })
     const link = `${env.get('FRONT_BASE_URL')}/confirm-account#${router.makeSignedUrl('confirmAccount', { email: user.email })}`
     return await Mails.register(user, link)
   }

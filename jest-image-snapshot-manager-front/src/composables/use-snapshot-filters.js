@@ -61,7 +61,7 @@ export default function useSnapshotFilters(snapshots) {
     const status = (statusAlias === 'PENDING' ? ['APPROVE', 'DECLINE'] : [statusAlias]).filter(
       Boolean
     )
-		filters.value.status.push(...status)
+    filters.value.status.push(...status)
 
     // Unset empty filters
     STATUS.forEach((e) => {
