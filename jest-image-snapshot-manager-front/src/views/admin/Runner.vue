@@ -37,7 +37,7 @@ const versionList = computed(() => {
   return [
     ...new Set(
       useSnapshotStore.snapshots
-        .filter((e) => e.projectId === currentProject.value?.id)
+        .filter((e) => e.projectId === project.value)
         .map((e) => e.version)
     )
   ]
@@ -48,25 +48,23 @@ const disabledCommit = computed(
   () =>
     !project.value ||
     (!version.value && !newVersion.value) ||
-    !!currentProject.value?.commitInProgress ||
+    !!project.value?.commitInProgress ||
     disabled.value ||
     useSnapshotStore.snapshots.some(
       (e) =>
-        e.projectId === currentProject.value?.id &&
-        e.version === version.value &&
-        e.status === 'COMMIT'
+        e.projectId === project.value &&
+        ['MERGE', 'CLOSE'].includes(e.status)
     )
 )
 const disabledMerge = computed(
   () =>
     !project.value ||
     !version.value ||
-    !!currentProject.value?.commitInProgress ||
+    !!project.value?.commitInProgress ||
     disabled.value ||
     !useSnapshotStore.snapshots.some(
       (e) =>
-        e.projectId === currentProject.value?.id &&
-        e.version === version.value &&
+        e.projectId === project.value &&
         ['APPROVE', 'DECLINE'].includes(e.status)
     )
 )
