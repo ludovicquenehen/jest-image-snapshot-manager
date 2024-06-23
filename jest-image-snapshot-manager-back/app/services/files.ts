@@ -35,7 +35,7 @@ export default class Files {
   static async tidy(
 		organization: string,
     project: Project,
-    version: number,
+    version: string,
     versionIteration: number,
     newSnapshot: string[]
   ) {
@@ -46,7 +46,7 @@ export default class Files {
     this.move(`./../${project.pathTests}/__image_snapshots__/__diff_output__`, dirPath)
   }
 
-  static async moveTruth(organization: string,project: Project, version: number, versionIteration: number, src: string) {
+  static async moveTruth(organization: string,project: Project, version: string, versionIteration: number, src: string) {
     const destPath = `./../${project.pathTests}/__image_snapshots__/${src.replace('-received', '')}`
     await fs.unlinkSync(destPath)
     await fs.copyFileSync(

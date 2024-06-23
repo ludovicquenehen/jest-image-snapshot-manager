@@ -1,6 +1,6 @@
 <template>
   <div class="md:w-fit">
-    <div class="text-xl text-white mb-8">Projects</div>
+    <div class="text-xl text-white mb-8">Devices</div>
     <div class="flex md:flex-row flex-col gap-2 mt-4">
       <input v-model="form.label" placeholder="Label" />
       <input v-model="form.suffix" placeholder="Suffix" />
@@ -41,8 +41,8 @@ const columns = ref([
   },
   {
     label: 'Suffix',
-    class: 'w-16',
-    field: 'suffix'
+    class: 'w-32',
+    field: (row) => `${row.suffix} (__${row.suffix}__)`
   },
   {
     class: 'w-32',

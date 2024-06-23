@@ -57,30 +57,11 @@ export default function useSnapshotFilters(snapshots) {
     () => computedSnapshots.value.filter((e) => e.status === 'CLOSE').length
   )
 
-  const filteredSnapshots = computed(() => {
-    let filtered = computedSnapshots.value.filter((e) => filters.value.status.includes(e.status))
-    const labels = []
-    filtered = filtered.reduce((acc, obj) => {
-      if (!labels.includes(obj.age)) {
-        acc.push(obj)
-      }
-      return acc
-    }, [])
-    return filtered
-  })
-
   const setFiltersStatus = (statusAlias) => {
     const status = (statusAlias === 'PENDING' ? ['APPROVE', 'DECLINE'] : [statusAlias]).filter(
       Boolean
     )
-    status.forEach((e) => {
-      const index = filters.value.status.findIndex((s) => s === e)
-      if (index >= 0) {
-        filters.value.status.splice(index, 1)
-      } else {
-        filters.value.status.push(e)
-      }
-    })
+		filters.value.status.push(...status)
 
     // Unset empty filters
     STATUS.forEach((e) => {
@@ -89,10 +70,10 @@ export default function useSnapshotFilters(snapshots) {
         if (e === 'REQUEST' && computedRequestCount.value === 0) {
           filters.value.status.splice(index, 1)
         }
-        if (e === 'APPROVE' && computedApproveCount.value === 0) {
+        if (e === 'APPROVE' && computedPendingCount.value === 0) {
           filters.value.status.splice(index, 1)
         }
-        if (e === 'DECLINE' && computedDeclineCount.value === 0) {
+        if (e === 'DECLINE' && computedPendingCount.value === 0) {
           filters.value.status.splice(index, 1)
         }
         if (e === 'MERGE' && computedMergedCount.value === 0) {
@@ -108,7 +89,6 @@ export default function useSnapshotFilters(snapshots) {
   }
 
   const handleFiltersChange = async () => {
-    setFiltersStatus([])
     refreshFilters()
     useUserStore.setPreferences({ ...filters.value, currentSnapshot: model.value })
   }
@@ -120,16 +100,11 @@ export default function useSnapshotFilters(snapshots) {
 
     if (
       !filters.value.versionIteration ||
-      !versionIterationList.value.includes(filters.value.version)
+      !versionIterationList.value.includes(filters.value.versionIteration)
     ) {
       filters.value.versionIteration =
         versionIterationList.value[versionIterationList.value.length - 1]
     }
-  }
-
-  const refresh = async () => {
-    await useSnapshotStore.fetch(true)
-    versionIterationList.value = [...new Set(snapshots.map((e) => e.versionIteration))]
   }
 
   onMounted(() => {
@@ -139,7 +114,7 @@ export default function useSnapshotFilters(snapshots) {
     if (preferences.value) {
       filters.value = preferences.value
       model.value =
-        preferences.currentSnapshot < filteredSnapshots.value.length
+        preferences.currentSnapshot < computedSnapshots.value.length
           ? preferences.currentSnapshot
           : 0
     }
@@ -157,8 +132,6 @@ export default function useSnapshotFilters(snapshots) {
     computedPendingCount,
     computedMergedCount,
     computedClosedCount,
-    filteredSnapshots,
-    refresh,
     setFiltersStatus,
     handleFiltersChange
   }

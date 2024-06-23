@@ -12,3 +12,4 @@ Depending on [jest-image-snapshot](https://github.com/americanexpress/jest-image
 -  Gestion des changelogs ? Commentaire à l’approbation/décline ?
 -  Possibilité d'ajouter des ressources sur un snapshot: seulement une liste d'URL pour le moment
 -  Faire un composant "PlainMessage" pour les message de succes à l'invite/inscription et le warning si pa de snapshot sur la Home
+-  Table: pagination

@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Snapshot from '../models/snapshot.js'
 import { canValidateSnapshot } from '../abilities/user.js'
 import Project from '../models/project.js'
+import Flow from '../services/flow.js'
 
 export default class SnapshotsController {
   async index({ auth }: HttpContext) {
@@ -21,11 +22,6 @@ export default class SnapshotsController {
     //TODO: delete file
     const user = await Snapshot.findOrFail(request.param('id'))
     return await user.delete()
-  }
-
-  async commit({ request }: HttpContext) {
-    const snapshot = await Snapshot.create(request.body())
-    return snapshot.toJSON()
   }
 
   async approve(ctx: HttpContext) {
@@ -59,11 +55,14 @@ export default class SnapshotsController {
     return snapshot.toJSON()
   }
 
-  async merge({ request }: HttpContext) {
+  async merge({ auth, request }: HttpContext) {
     const snapshot = await Snapshot.findOrFail(request.param('id'))
-    snapshot.status = 'MERGE'
-    await snapshot.save()
-    return snapshot.toJSON()
+    return await Flow.merge(
+      auth.user?.organization || '',
+      snapshot.projectId,
+      snapshot.version,
+      snapshot.id
+    )
   }
 
   async archive({ request }: HttpContext) {

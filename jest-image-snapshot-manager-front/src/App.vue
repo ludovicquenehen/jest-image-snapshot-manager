@@ -1,7 +1,7 @@
 <template>
   <div v-if="!useAppStore.loading">
     <Toolbar :items="toolbarItems" />
-    <Navbar v-if="hasSnapshots" :items="navbarItems" />
+    <Navbar :items="navbarItems" />
     <div class="md:pl-24 mb-[15%] overflow-y-visible">
       <RouterView />
     </div>

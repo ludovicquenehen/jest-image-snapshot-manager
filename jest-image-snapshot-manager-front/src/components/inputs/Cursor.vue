@@ -1,5 +1,5 @@
 <template>
-  <input v-model="model" type="range" v-bind="attrs" class="cursor-diff" />
+  <input v-model="model" type="range" v-bind="attrs" class="cursor-diff mb-8" />
 </template>
 
 <script setup>

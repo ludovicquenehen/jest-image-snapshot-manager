@@ -107,7 +107,6 @@ export default reactive({
         if (await api.get(`/${hash}`)) toast.success('Account confirmed successfully')
       }, 1000)
     } catch (error) {
-      console.log(error)
       toast.error('Account confirmation error')
     }
   },

@@ -7,7 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.string('id').notNullable()
       table.string('organization').notNullable()
-      table.integer('version').notNullable()
+      table.string('version').notNullable()
       table.integer('version_iteration').notNullable()
       table.string('label').notNullable()
       table.integer('validator_id').notNullable()
@@ -19,6 +19,7 @@ export default class extends BaseSchema {
       table.boolean('status').notNullable()
       table.string('comment').nullable()
       table.boolean('archived').defaultTo(false)
+			table.string('device').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

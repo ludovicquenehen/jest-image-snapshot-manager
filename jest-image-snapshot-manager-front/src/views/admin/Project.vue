@@ -110,10 +110,7 @@ const columns = ref([
           command: {
             iconClass: 'mdi mdi-card',
             class: 'button-green w-16',
-            disabled: (device, project) => {
-              console.log(project.devices, device.id)
-              return project.devices.map((e) => e.id).includes(device.id)
-            },
+            disabled: (device, project) => project.devices.map((e) => e.id).includes(device.id),
             action: (device, project) => useDeviceStore.assign(device.id, project.id)
           }
         },

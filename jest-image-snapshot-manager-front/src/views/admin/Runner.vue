@@ -10,7 +10,7 @@
         <option disabled value="">Version</option>
         <option v-for="version in versionList" :value="version">{{ version }}</option>
       </select>
-      <input v-model="newVersion" type="number" placeholder="New version" />
+      <input v-model="newVersion" placeholder="New version" />
       <button :disabled="disabledCommit" class="button-white md:w-16" @click="run('commit')">
         <i class="mdi mdi-source-pull" />
       </button>
@@ -24,7 +24,7 @@
   </div>
 </template>
 <script setup>
-import { api, proxyApi } from '@/plugins/axios'
+import { api } from '@/plugins/axios'
 import useProjectStore from '@/stores/use-project-store'
 import useSnapshotStore from '@/stores/use-snapshot-store'
 
