@@ -9,6 +9,7 @@
       </template>
     </div>
     <div class="flex flex-col gap-1">
+			<div v-if="rows.length === 0 && !hideBorders && !hideColumns" class="text-white p-4 border-b-2 border-current">Aucune données</div>
       <div
         v-for="(row, index) in typeof rows === 'function' ? rows(...parentRows) : rows"
         :class="[

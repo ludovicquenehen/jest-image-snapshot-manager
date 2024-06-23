@@ -134,6 +134,13 @@ const props = defineProps({
   }
 })
 
+watch(
+  () => visible.value,
+  () => {
+    useUserStore.setPreferences({ device: Object.values(props.devices)[visible.value]?.device })
+  }
+)
+
 const router = useRouter()
 const isAdmin = computed(() => useUserStore.user?.role === 'ADMIN')
 
@@ -167,7 +174,9 @@ const snapshotImageWidth = computed(() => window.innerWidth / 2)
 const snapshotImageWidthPx = computed(() => `${snapshotImageWidth.value}px`)
 const cursor = ref(0)
 const computedCursor = computed(() => `${(cursor.value * snapshotImageWidth.value) / 100}px`)
-const computedCursorDevice = computed(() => `${(cursor.value * (window.innerWidth * 0.15)) / 100}px`)
+const computedCursorDevice = computed(
+  () => `${(cursor.value * (window.innerWidth * 0.15)) / 100}px`
+)
 /** */
 </script>
 

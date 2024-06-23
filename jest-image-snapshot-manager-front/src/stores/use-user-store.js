@@ -60,7 +60,8 @@ export default reactive({
   },
   async update(user) {
     try {
-      if (await api.post(`/user/${user.id}`, { ...user })) toast.success('User updated successfully')
+      if (await api.post(`/user/${user.id}`, { ...user }))
+        toast.success('User updated successfully')
       await this.fetch(true)
     } catch {
       toast.error('Update user error')
@@ -136,7 +137,15 @@ export default reactive({
     }
   },
   setPreferences(preferences) {
-    localStorage.setItem('preferences', JSON.stringify(preferences))
+    localStorage.setItem(
+      'preferences',
+      JSON.stringify({
+        ...(localStorage.getItem('preferences')
+          ? JSON.parse(localStorage.getItem('preferences'))
+          : {}),
+        ...preferences
+      })
+    )
   },
   getPreferences() {
     return localStorage.getItem('preferences')

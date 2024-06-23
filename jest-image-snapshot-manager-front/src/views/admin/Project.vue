@@ -34,7 +34,7 @@ const form = ref({
 const columns = ref([
   {
     label: 'Label',
-    class: 'w-64',
+    class: 'w-32',
     field: 'label'
   },
   {

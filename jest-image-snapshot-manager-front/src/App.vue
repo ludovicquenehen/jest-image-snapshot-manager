@@ -67,29 +67,29 @@ const navbarItems = computed(() =>
     useUserStore.isAdmin && { separator: true },
     useUserStore.isAdmin && {
       iconClass: () => [
-        'mdi mdi-shield-account text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
-        { 'text-orange-500': route.path.startsWith('/admin/user') }
+        'mdi mdi-shield-account text-4xl cursor-pointer hover:text-yellow-600 hover:text-5xl',
+        { 'text-yellow-600': route.path.startsWith('/admin/user') }
       ],
       action: () => router.push('/admin/user')
     },
     useUserStore.isAdmin && {
       iconClass: () => [
-        'mdi mdi-cellphone-link text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
-        { 'text-orange-500': route.path.startsWith('/admin/device') }
+        'mdi mdi-cellphone-link text-4xl cursor-pointer hover:text-yellow-600 hover:text-5xl',
+        { 'text-yellow-600': route.path.startsWith('/admin/device') }
       ],
       action: () => router.push('/admin/device')
     },
     useUserStore.isAdmin && {
       iconClass: () => [
-        'mdi mdi-sitemap-outline text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
-        { 'text-orange-500': route.path.startsWith('/admin/project') }
+        'mdi mdi-sitemap-outline text-4xl cursor-pointer hover:text-yellow-600 hover:text-5xl',
+        { 'text-yellow-600': route.path.startsWith('/admin/project') }
       ],
       action: () => router.push('/admin/project')
     },
     useUserStore.isAdmin && {
       iconClass: () => [
-        'mdi mdi-test-tube text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
-        { 'text-orange-500': route.path.startsWith('/admin/runner') }
+        'mdi mdi-test-tube text-4xl cursor-pointer hover:text-yellow-600 hover:text-5xl',
+        { 'text-yellow-600': route.path.startsWith('/admin/runner') }
       ],
       action: () => router.push('/admin/runner')
     }
