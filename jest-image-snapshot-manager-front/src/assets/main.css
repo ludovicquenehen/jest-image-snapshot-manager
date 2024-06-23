@@ -18,7 +18,7 @@
 }
 
 .loader {
-	position: absolute;
+  position: absolute;
   top: 30vh;
   left: 45%;
   width: 96px;
@@ -50,45 +50,44 @@
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
-		border: 3px dotted #963484ff;
+    border: 3px dotted #963484ff;
   }
-	33% {
+  33% {
     transform: rotate(120deg);
-		border: 3px dotted #f3b700ff;
+    border: 3px dotted #f3b700ff;
   }
-	67% {
+  67% {
     transform: rotate(240deg);
-		border: 3px dotted #32e875ff;
+    border: 3px dotted #32e875ff;
   }
   100% {
     transform: rotate(360deg);
-		border: 3px dotted #d62246ff;
+    border: 3px dotted #d62246ff;
   }
 }
 @keyframes rotationBack {
   0% {
     transform: rotate(0deg);
-		border: 3px dotted #963484ff;
+    border: 3px dotted #963484ff;
   }
-	33% {
+  33% {
     transform: rotate(-120deg);
-		border: 3px dotted #f3b700ff;
+    border: 3px dotted #f3b700ff;
   }
-	67% {
+  67% {
     transform: rotate(-240deg);
-		border: 3px dotted #32e875ff;
+    border: 3px dotted #32e875ff;
   }
   100% {
-    transform: rotate(-
-		360deg);
-		border: 3px dotted #d62246ff;
+    transform: rotate(-360deg);
+    border: 3px dotted #d62246ff;
   }
 }
 
 @media screen and (max-width: 668px) {
-.sm-full {
-	width: 100%;
-}
+  .sm-full {
+    width: 100%;
+  }
 }
 
 .link {
@@ -141,8 +140,16 @@ button {
   background: var(--deep-sky-blue);
 }
 
+.checkbox.disabled {
+	cursor: not-allowed;
+}
+
+.checkbox.selected.disabled i {
+  opacity: 60%;
+}
+
 .bg-current {
-	background: var(--color-background);
+  background: var(--color-background);
 }
 
 .bg-blue {
@@ -219,8 +226,8 @@ button.fill {
 }
 
 button.active {
-	background: #fff;
-	color: #000 !important;
+  background: #fff;
+  color: #000 !important;
 }
 
 .text-plum {

@@ -1,10 +1,12 @@
 <template>
   <div class="md:w-fit">
     <div class="text-xl text-white mb-8">Users</div>
-    <div class="flex items-end gap-8">
-      <span class="text-white text-lg self-center font-semibold underline">Invite by link or email</span>
+    <div class="text-white text-lg self-center font-semibold underline mb-2">
+      Invite by link or email
+    </div>
+    <div class="flex flex-col gap-2">
       <span
-        class="copy-clipboard flex items-center justify-center text-white px-6 py-4 border-2 border-white rounded-full h-16 w-[550px] cursor-pointer"
+        class="copy-clipboard flex items-center justify-center text-white px-6 py-4 border-2 border-white rounded-full h-16 w-[800px] cursor-pointer"
         @click="copyToClipboard(`${$baseUrl}/sign-in/${useUserStore.user?.organization}`)"
       >
         <span class="value">{{ `${$baseUrl}/sign-in/${useUserStore.user?.organization}` }}</span>
@@ -34,7 +36,6 @@ import useProjectStore from '@/stores/use-project-store'
 import Table from '@/components/tables/Table.vue'
 import Checkbox from '@/components/inputs/Checkbox.vue'
 import { useToast } from 'vue-toastification'
-import router from '@/router'
 const toast = useToast()
 
 const copyToClipboard = async (link) => {
@@ -65,8 +66,9 @@ const columns = ref([
     component: {
       is: Checkbox,
       model: 'active',
+      disabled: (row) => row.role === 'ADMIN',
       action: async (row) => {
-        await useUserStore.update({ ...row, activate: !row.activate })
+        await useUserStore.update(row)
         await useUserStore.fetch(true)
       }
     }

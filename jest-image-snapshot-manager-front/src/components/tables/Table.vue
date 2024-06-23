@@ -76,7 +76,11 @@
                 <component
                   :is="column.component.is"
                   v-model="row[column.component.model]"
-                  @click="handleClick(row, column.component.action)"
+                  v-bind="{
+                    ...column.component,
+                    row
+                  }"
+                  @click="handleClick(row, column.component)"
                 />
               </template>
               <template v-else>{{ row }}</template>
@@ -136,9 +140,11 @@ const handleObject = (fld) => {
   return t
 }
 
-const handleClick = (row, action) => {
-  action(row)
-  emit('click', row)
+const handleClick = (row, component) => {
+  if (!(typeof component.disabled === 'function' ? component.disabled(row) : component.disabled)) {
+    component.action(row)
+    emit('click', row)
+  }
 }
 
 const computedColumns = computed(() => handleObject(props.columns))

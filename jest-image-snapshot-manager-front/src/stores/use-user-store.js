@@ -60,7 +60,7 @@ export default reactive({
   },
   async update(user) {
     try {
-      if (await api.post('/user', { ...user })) toast.success('User updated successfully')
+      if (await api.post(`/user/${user.id}`, { ...user })) toast.success('User updated successfully')
       await this.fetch(true)
     } catch {
       toast.error('Update user error')
