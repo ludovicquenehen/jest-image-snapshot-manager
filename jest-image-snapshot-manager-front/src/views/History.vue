@@ -205,11 +205,6 @@ const columns = ref([
     field: (row) => useProjectStore.projects.find((e) => e.id === row.projectId)?.label
   },
   {
-    label: 'Device',
-    class: 'w-16',
-    field: 'device'
-  },
-  {
     label: 'Version',
     class: 'w-16',
     field: 'version'

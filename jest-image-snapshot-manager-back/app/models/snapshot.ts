@@ -15,7 +15,7 @@ export default class Snapshot extends BaseModel {
   declare organization: string
 
   @column()
-  declare version: string
+  declare version: number
 
   @column()
   declare versionIteration: number
