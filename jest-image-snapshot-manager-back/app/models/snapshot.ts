@@ -11,11 +11,11 @@ export default class Snapshot extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
-	@column()
+  @column()
   declare organization: string
 
   @column()
-  declare version: number
+  declare version: string
 
   @column()
   declare versionIteration: number
@@ -69,6 +69,9 @@ export default class Snapshot extends BaseModel {
 
   @column()
   declare archived: boolean
+
+  @column()
+  declare device: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

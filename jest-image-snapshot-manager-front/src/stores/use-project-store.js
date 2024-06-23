@@ -23,7 +23,7 @@ export default reactive({
   },
   async remove(projectId) {
     try {
-      if (await api.delete(`/project/${projectId}`)) toast.success('Porject removed successfully')
+      if (await api.delete(`/project/${projectId}`)) toast.success('Project removed successfully')
       await this.fetch(true)
     } catch {
       toast.error('Remove project error')

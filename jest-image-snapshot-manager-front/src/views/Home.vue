@@ -28,14 +28,12 @@
           {{ project.label }}
         </span>
         <div class="flex gap-2 items-center">
-          <span class="text-lg text-white font-semibold">Versions:</span>
+          <span class="text-lg text-white font-semibold">Last versions:</span>
           <span>
             {{
-              Math.max(
-                ...useSnapshotsStore.snapshots
-                  .filter((e) => e.projectId === project.id)
-                  .map((e) => e.version)
-              )
+              useSnapshotsStore.snapshots
+                .filter((e) => e.projectId === project.id)
+                .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0]?.version || 'N/A'
             }}
           </span>
         </div>

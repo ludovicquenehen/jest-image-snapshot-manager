@@ -8,6 +8,7 @@
 import useSnapshotStore from '@/stores/use-snapshot-store'
 import useUserStore from '@/stores/use-user-store'
 import Table from '@/components/tables/Table.vue'
+import useProjectStore from '@/stores/use-project-store'
 
 const router = useRouter()
 
@@ -15,6 +16,7 @@ const snapshots = computed(() => {
   const reversed = [...useSnapshotStore.fullSnapshots]
   reversed.reverse()
   return useSnapshotStore.fullSnapshots
+    .filter((e) => !e.device)
     .map((e) => ({
       ...e,
       last: reversed.find((l) => l.label === e.label)
@@ -24,6 +26,11 @@ const snapshots = computed(() => {
 })
 
 const columns = ref([
+  {
+    label: 'Projet',
+    class: 'w-32',
+    field: (row) => useProjectStore.projects.find((e) => e.id === row.projectId)?.label
+  },
   {
     label: 'Label',
     class: 'w-64',

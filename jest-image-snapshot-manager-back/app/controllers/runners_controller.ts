@@ -6,7 +6,7 @@ export default class RunnersController {
     return await Flow.commit(
       auth.user?.organization || '',
       request.param('id'),
-      +request.param('version')
+      request.param('version')
     )
   }
 
@@ -14,7 +14,7 @@ export default class RunnersController {
     return await Flow.merge(
       auth.user?.organization || '',
       request.param('id'),
-      +request.param('version')
+      request.param('version')
     )
   }
 }

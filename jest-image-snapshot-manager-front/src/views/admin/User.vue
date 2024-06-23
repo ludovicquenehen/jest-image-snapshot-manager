@@ -1,19 +1,31 @@
 <template>
   <div class="md:w-fit">
     <div class="text-xl text-white mb-8">Users</div>
-    <div class="flex md:flex-row flex-col gap-2 mt-4 md:w-fit w-full">
-      <input v-model="form.email" placeholder="Email" />
-      <select v-model="form.role">
-        <option disabled value="">Role</option>
-        <option v-for="role in ['ADMIN', 'USER']" :value="role">{{ role }}</option>
-      </select>
-      <button
-        :disabled="Object.values(form).some((e) => e === '')"
-        class="button-green md:w-16"
-        @click="useUserStore.add(form)"
+    <div class="text-white text-lg self-center font-semibold underline mb-2">
+      Invite by link or email
+    </div>
+    <div class="flex flex-col gap-2">
+      <span
+        class="copy-clipboard flex items-center justify-center text-white px-6 py-4 border-2 border-white rounded-full h-16 w-[800px] cursor-pointer"
+        @click="copyToClipboard(`${$baseUrl}/sign-in/${useUserStore.user?.organization}`)"
       >
-        <i class="mdi mdi-send" />
-      </button>
+        <span class="value">{{ `${$baseUrl}/sign-in/${useUserStore.user?.organization}` }}</span>
+        <span class="text text-lg font-semibold">Copy invitation link to clipboard</span>
+      </span>
+      <div class="flex md:flex-row flex-col gap-2 mt-4 md:w-fit w-full">
+        <input v-model="form.email" placeholder="Email" />
+        <select v-model="form.role">
+          <option disabled value="">Role</option>
+          <option v-for="role in ['ADMIN', 'USER']" :value="role">{{ role }}</option>
+        </select>
+        <button
+          :disabled="Object.values(form).some((e) => e === '')"
+          class="button-green md:w-16"
+          @click="useUserStore.add(form)"
+        >
+          <i class="mdi mdi-send" />
+        </button>
+      </div>
     </div>
     <Table :columns="columns" :rows="users" />
   </div>
@@ -23,7 +35,17 @@ import useUserStore from '@/stores/use-user-store'
 import useProjectStore from '@/stores/use-project-store'
 import Table from '@/components/tables/Table.vue'
 import Checkbox from '@/components/inputs/Checkbox.vue'
-import useUser from '@/stores/use-user-store'
+import { useToast } from 'vue-toastification'
+const toast = useToast()
+
+const copyToClipboard = async (link) => {
+  try {
+    await navigator.clipboard.writeText(link)
+    toast.success('Copied to clipboard successfully')
+  } catch {
+    toast.error('Copy to clipboard error')
+  }
+}
 
 const users = computed(() =>
   useUserStore.users
@@ -44,8 +66,9 @@ const columns = ref([
     component: {
       is: Checkbox,
       model: 'active',
+      disabled: (row) => row.role === 'ADMIN',
       action: async (row) => {
-        await useUserStore.update({ ...row, activate: !row.activate })
+        await useUserStore.update(row)
         await useUserStore.fetch(true)
       }
     }
@@ -109,3 +132,21 @@ const columns = ref([
   }
 ])
 </script>
+
+<style scoped>
+.copy-clipboard .text {
+  display: block;
+}
+
+.copy-clipboard .value {
+  display: none;
+}
+
+.copy-clipboard:hover .text {
+  display: none;
+}
+
+.copy-clipboard:hover .value {
+  display: block;
+}
+</style>

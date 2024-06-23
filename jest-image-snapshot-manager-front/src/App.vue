@@ -20,6 +20,7 @@ import useAppStore from '@/stores/use-app-store'
 import useProjectStore from '@/stores/use-project-store'
 import useUserStore from '@/stores/use-user-store'
 import useSnapshotStore from '@/stores/use-snapshot-store'
+import useDeviceStore from '@/stores/use-device-store'
 import Navbar from '@/components/app/Navbar.vue'
 import Toolbar from '@/components/app/Toolbar.vue'
 
@@ -33,7 +34,6 @@ const logout = async () => {
 
 const truths = computed(() => useSnapshotStore.snapshots.filter((e) => !!e.truth))
 const hasSnapshots = computed(() => useSnapshotStore.snapshots?.length > 0)
-
 const navbarItems = computed(() =>
   [
     {
@@ -64,32 +64,32 @@ const navbarItems = computed(() =>
       ],
       action: () => router.push(`/history/${truths.value[0]?.id}`)
     },
-    { separator: true },
+    useUserStore.isAdmin && { separator: true },
     useUserStore.isAdmin && {
       iconClass: () => [
-        'mdi mdi-shield-account text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
-        { 'text-orange-500': route.path.startsWith('/admin/user') }
+        'mdi mdi-shield-account text-4xl cursor-pointer hover:text-yellow-600 hover:text-5xl',
+        { 'text-yellow-600': route.path.startsWith('/admin/user') }
       ],
       action: () => router.push('/admin/user')
     },
     useUserStore.isAdmin && {
       iconClass: () => [
-        'mdi mdi-cellphone-link text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
-        { 'text-orange-500': route.path.startsWith('/admin/device') }
+        'mdi mdi-cellphone-link text-4xl cursor-pointer hover:text-yellow-600 hover:text-5xl',
+        { 'text-yellow-600': route.path.startsWith('/admin/device') }
       ],
       action: () => router.push('/admin/device')
     },
     useUserStore.isAdmin && {
       iconClass: () => [
-        'mdi mdi-sitemap-outline text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
-        { 'text-orange-500': route.path.startsWith('/admin/project') }
+        'mdi mdi-sitemap-outline text-4xl cursor-pointer hover:text-yellow-600 hover:text-5xl',
+        { 'text-yellow-600': route.path.startsWith('/admin/project') }
       ],
       action: () => router.push('/admin/project')
     },
     useUserStore.isAdmin && {
       iconClass: () => [
-        'mdi mdi-test-tube text-4xl cursor-pointer hover:text-orange-500 hover:text-5xl',
-        { 'text-orange-500': route.path.startsWith('/admin/runner') }
+        'mdi mdi-test-tube text-4xl cursor-pointer hover:text-yellow-600 hover:text-5xl',
+        { 'text-yellow-600': route.path.startsWith('/admin/runner') }
       ],
       action: () => router.push('/admin/runner')
     }
@@ -117,6 +117,7 @@ onMounted(async () => {
       await useProjectStore.fetch(true)
       await useSnapshotStore.fetch(true)
       await useUserStore.fetch(true)
+      await useDeviceStore.fetch(true)
     }
     setTimeout(() => {
       useAppStore.loading = false

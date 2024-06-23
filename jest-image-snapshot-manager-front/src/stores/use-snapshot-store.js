@@ -29,6 +29,7 @@ export default reactive({
       )
         toast.success('Snapshot archived successfully')
       await this.fetch(true)
+			return true
     } catch {
       toast.error('Archive snapshot error')
     }
@@ -42,6 +43,7 @@ export default reactive({
       )
         toast.success('Snapshot restored successfully')
       await this.fetch(true)
+			return true
     } catch {
       toast.error('Unarchive snapshot error')
     }
@@ -51,8 +53,39 @@ export default reactive({
       if (await api.delete(`/snapshot/${snapshotId}`))
         toast.success('Snapshot removed successfully')
       await this.fetch(true)
+			return true
     } catch {
       toast.error('Remove snapshot error')
+    }
+  },
+  async approve(snapshotId, truthId) {
+    try {
+      if (await api.post(`/snapshot/${snapshotId}/approve`, { truthId }))
+        toast.success('Snapshot approved successfully')
+      await this.fetch(true)
+			return true
+    } catch {
+      toast.error('Approve snapshot error')
+    }
+  },
+  async decline(snapshotId) {
+    try {
+      if (await api.get(`/snapshot/${snapshotId}/decline`))
+        toast.success('Snapshot declined successfully')
+      await this.fetch(true)
+			return true
+    } catch {
+      toast.error('Decline snapshot error')
+    }
+  },
+  async merge(snapshotId) {
+    try {
+      if (await api.get(`/snapshot/${snapshotId}/merge`))
+        toast.success('Snapshot merged successfully')
+      await this.fetch(true)
+			return true
+    } catch {
+      toast.error('Merge snapshot error')
     }
   }
 })

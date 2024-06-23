@@ -2,10 +2,12 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 const UserProjectsController = () => import('../app/controllers/user_projects_controller.js')
 const AuthenticationController = () => import('../app/controllers/authentication_controller.js')
+const DevicesController = () => import('../app/controllers/devices_controller.js')
 const ProjectsController = () => import('../app/controllers/projects_controller.js')
 const RunnersController = () => import('../app/controllers/runners_controller.js')
 const SnapshotsController = () => import('../app/controllers/snapshots_controller.js')
 const UsersController = () => import('../app/controllers/users_controller.js')
+const DevicesProjectsController = () => import('../app/controllers/devices_projects_controller.js')
 
 router
   .group(() => {
@@ -45,6 +47,22 @@ router
     router.put('project', [ProjectsController, 'store']).use(middleware.auth())
     router
       .delete('project/:id', [ProjectsController, 'delete'])
+      .use(middleware.auth())
+      .use(middleware.admin())
+
+    /** Device */
+    router.get('device', [DevicesController, 'index']).use(middleware.auth())
+    router.put('device', [DevicesController, 'store']).use(middleware.auth())
+    router
+      .delete('device/:id', [DevicesController, 'delete'])
+      .use(middleware.auth())
+      .use(middleware.admin())
+		router
+      .get('device/assign/:id/:projectId', [DevicesProjectsController, 'assign'])
+      .use(middleware.auth())
+      .use(middleware.admin())
+		router
+      .get('device/unassign/:id/:projectId', [DevicesProjectsController, 'unassign'])
       .use(middleware.auth())
       .use(middleware.admin())
 
