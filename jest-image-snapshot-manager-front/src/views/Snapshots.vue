@@ -27,7 +27,7 @@ const snapshots = computed(() => {
 
 const columns = ref([
   {
-    label: 'Projet',
+    label: 'Project',
     class: 'w-32',
     field: (row) => useProjectStore.projects.find((e) => e.id === row.projectId)?.label
   },

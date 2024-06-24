@@ -1,25 +1,69 @@
 <template>
-  <div v-if="useSnapshotsStore.snapshots.length > 0" class="pt-4">
-    <div class="flex items-center flex-col border-2 border-current rounded-xl w-32">
-      <div class="text-xl text-white">All statistics</div>
-      <span class="text-plum font-semibold">
-        REQUEST {{ useSnapshotsStore.snapshots.filter((s) => s.status === 'REQUEST').length }}
-      </span>
-      <span class="text-warning font-semibold">
-        PENDING
-        {{
+  <div v-if="useSnapshotsStore.snapshots.length > 0" class="flex flex-col gap-8">
+    <div class="flex flex-wrap gap-8">
+      <div
+        class="flex flex-col items-center justify-center border-2 border-plum text-white font-semibold rounded-xl w-64 h-32"
+      >
+        <span class="font-semibold">PROJECTS</span>
+        <span class="text-6xl">{{
+          useProjectStore.projects.filter((p) =>
+            useUserStore.user.projects.map((e) => e.id).includes(p.id)
+          ).length
+        }}</span>
+      </div>
+      <div
+        v-if="useUserStore.isAdmin"
+        class="flex flex-col items-center justify-center border-2 border-green text-white font-semibold rounded-xl w-64 h-32"
+      >
+        <span class="font-semibold">USERS</span>
+        <span class="text-6xl"> {{ useUserStore.users.length }}</span>
+      </div>
+      <div
+        class="flex flex-col items-center justify-center border-2 border-blue text-white font-semibold rounded-xl w-64 h-32"
+      >
+        <span class="font-semibold">ACTIVE DEVICES</span>
+        <span class="text-6xl">{{
+          useProjectStore.projects.map((e) => e.devices).filter((e) => e.length).length
+        }}</span>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-8">
+      <div
+        class="flex flex-col items-center justify-center bg-plum text-black font-semibold rounded-xl w-64 h-32"
+      >
+        <span class="font-semibold">REQUEST</span>
+        <span class="text-6xl">{{
+          useSnapshotsStore.snapshots.filter((s) => s.status === 'REQUEST').length
+        }}</span>
+      </div>
+      <div
+        class="flex flex-col items-center justify-center bg-warning text-black rounded-xl w-64 h-32"
+      >
+        <span class="font-semibold">PENDING</span>
+        <span class="text-6xl">{{
           useSnapshotsStore.snapshots.filter((s) => ['APPROVE', 'DECLINE'].includes(s.status))
             .length
-        }}
-      </span>
-      <span class="text-green font-semibold">
-        MERGED {{ useSnapshotsStore.snapshots.filter((s) => s.status === 'MERGE').length }}
-      </span>
-      <span class="text-red font-semibold">
-        CLOSED {{ useSnapshotsStore.snapshots.filter((s) => s.status === 'CLOSE').length }}
-      </span>
+        }}</span>
+      </div>
+      <div
+        class="flex flex-col items-center justify-center bg-green text-black font-semibold rounded-xl w-64 h-32"
+      >
+        <span class="font-semibold">MERGED</span>
+        <span class="text-6xl">{{
+          useSnapshotsStore.snapshots.filter((s) => s.status === 'MERGE').length
+        }}</span>
+      </div>
+      <div
+        class="flex flex-col items-center justify-center bg-red text-black font-semibold rounded-xl w-64 h-32"
+      >
+        <span class="font-semibold">CLOSED</span>
+        <span class="text-6xl">{{
+          useSnapshotsStore.snapshots.filter((s) => s.status === 'CLOSE').length
+        }}</span>
+      </div>
     </div>
-    <div class="flex flex-wrap gap-4 mt-8">
+
+    <!-- <div class="flex flex-wrap gap-4 mt-8">
       <div
         v-for="project in projects"
         class="flex flex-col gap-4 border-2 border-current w-64 px-12 py-4 rounded-xl"
@@ -74,7 +118,7 @@
           {{ user.email }}
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <div v-else-if="!useUserStore.isAdmin" class="flex flex-col text-center gap-8 mt-28">
     <i class="mdi mdi-emoticon-sad text-9xl text-orange-500" />
@@ -106,6 +150,7 @@
 import useProjectStore from '@/stores/use-project-store'
 import useUserStore from '@/stores/use-user-store'
 import useSnapshotsStore from '@/stores/use-snapshot-store'
+import useDeviceStore from '@/stores/use-device-store'
 
 const router = useRouter()
 const projects = computed(() =>

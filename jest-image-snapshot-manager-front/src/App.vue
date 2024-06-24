@@ -95,11 +95,11 @@ const navbarItems = computed(() =>
     }
   ].filter(Boolean)
 )
-const toolbarItems = computed(() => ([
+const toolbarItems = computed(() => [
   {
     iconClass: 'mdi mdi-account',
     color: 'action',
-		fill: route.path === '/user',
+    fill: route.path === '/user',
     action: () => router.push('/user')
   },
   {
@@ -107,7 +107,7 @@ const toolbarItems = computed(() => ([
     color: 'red',
     action: logout
   }
-]))
+])
 
 onMounted(async () => {
   setTimeout(async () => {

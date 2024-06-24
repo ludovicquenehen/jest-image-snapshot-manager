@@ -187,11 +187,11 @@ const goToSnapshot = (snapshot) => {
 }
 
 const rowClass = (row) => [
-  '-mb-1 h-14 flex',
+  '-mb-1 h-14 flex opacity-80',
   {
-    'bg-blue': row.id === route.params.id,
-    'bg-green': !!row.truth,
-    'bg-blue-green': row.id === route.params.id && !!row.truth
+    'bg-blue-light': row.id === route.params.id,
+    'bg-green-light': !!row.truth,
+    'bg-blue-green-light': row.id === route.params.id && !!row.truth
   }
 ]
 
@@ -201,7 +201,7 @@ const rowClick = (row) => {
 
 const columns = ref([
   {
-    label: 'Projet',
+    label: 'Project',
     class: 'w-32',
     field: (row) => useProjectStore.projects.find((e) => e.id === row.projectId)?.label
   },

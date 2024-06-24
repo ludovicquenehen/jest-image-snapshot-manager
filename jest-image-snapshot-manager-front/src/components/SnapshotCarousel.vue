@@ -72,7 +72,7 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col item-center gap-4 w-full mt-2">
+      <div class="flex flex-col item-center w-full mt-2">
         <Cursor
           v-model="cursor"
           min="0"

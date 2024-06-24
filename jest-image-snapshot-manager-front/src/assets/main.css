@@ -2,13 +2,18 @@
 
 :root {
   --plum: #963484ff;
+  --plum-light: #96348455;
   --true-blue: #3066beff;
   --argentinian-blue: #60afffff;
   --deep-sky-blue: #28c2ffff;
+  --deep-sky-blue-light: #28c2ff55;
   --aqua: #2af5ffff;
   --amber: #f3b700ff;
+  --amber-light: #f3b70055;
   --malachite: #32e875ff;
+  --malachite-light: #32e87555;
   --rusty-red: #d62246ff;
+  --rusty-red-light: #d6224655;
 }
 
 #app {
@@ -50,37 +55,37 @@
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
-    border: 3px dotted #963484ff;
+    border: 3px dotted var(--plum);
   }
   33% {
     transform: rotate(120deg);
-    border: 3px dotted #f3b700ff;
+    border: 3px dotted var(--amber);
   }
   67% {
     transform: rotate(240deg);
-    border: 3px dotted #32e875ff;
+    border: 3px dotted var(--malachite);
   }
   100% {
     transform: rotate(360deg);
-    border: 3px dotted #d62246ff;
+    border: 3px dotted var(--rusty-red);
   }
 }
 @keyframes rotationBack {
   0% {
     transform: rotate(0deg);
-    border: 3px dotted #963484ff;
+    border: 3px dotted var(--plum);
   }
   33% {
     transform: rotate(-120deg);
-    border: 3px dotted #f3b700ff;
+    border: 3px dotted var(--amber);
   }
   67% {
     transform: rotate(-240deg);
-    border: 3px dotted #32e875ff;
+    border: 3px dotted var(--malachite);
   }
   100% {
     transform: rotate(-360deg);
-    border: 3px dotted #d62246ff;
+    border: 3px dotted var(--rusty-red);
   }
 }
 
@@ -141,7 +146,7 @@ button {
 }
 
 .checkbox.disabled {
-	cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .checkbox.selected.disabled i {
@@ -153,15 +158,47 @@ button {
 }
 
 .bg-blue {
-  background: #28c2ff55;
+  background: var(--deep-sky-blue);
 }
 
 .bg-green {
-  background: #32e87555;
+  background: var(--malachite);
 }
 
-.bg-blue-green {
-  background: linear-gradient(90deg, #28c2ff55 0%, #32e87555 100%);
+.bg-plum {
+  background: var(--plum);
+}
+
+.bg-warning {
+  background: var(--amber);
+}
+
+.bg-red {
+  background: var(--rusty-red);
+}
+
+.bg-blue-light {
+  background: var(--deep-sky-blue-light);
+}
+
+.bg-green-light {
+  background: var(--malachite-light);
+}
+
+.bg-blue-green-light {
+  background: linear-gradient(90deg, var(--deep-sky-blue-light) 0%, var(--malachite-light) 100%);
+}
+
+.bg-plum-light {
+  background: var(--plum-light);
+}
+
+.bg-warning-light {
+  background: var(--amber-light);
+}
+
+.bg-red-light {
+  background: var(--rusty-red-light);
 }
 
 button,
@@ -244,6 +281,26 @@ button.active {
 
 .text-red {
   color: var(--rusty-red);
+}
+
+.border-blue {
+  border-color: var(--deep-sky-blue);
+}
+
+.border-plum {
+  border-color: var(--plum);
+}
+
+.border-warning {
+  border-color: var(--amber);
+}
+
+.border-green {
+  border-color: var(--malachite);
+}
+
+.border-red {
+  border-color: var(--rusty-red);
 }
 
 /* .button-warning[disabled] {
