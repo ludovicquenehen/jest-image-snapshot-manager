@@ -8,7 +8,7 @@
           </button>
           <span class="text-white"
             >{{ devices[device]?.label }} ({{
-              device !== 'null' ? device : 'default'
+              device !== 'null' ? useDeviceStore.devices.find(e => e.suffix === device)?.label : 'Default'
             }}
             device)</span
           >
@@ -122,6 +122,7 @@
 import { proxyApi } from '@/plugins/axios'
 import useUserStore from '@/stores/use-user-store'
 import useSnapshotStore from '@/stores/use-snapshot-store'
+import useDeviceStore from '@/stores/use-device-store'
 import Cursor from '@/components/inputs/Cursor.vue'
 
 const emit = defineEmits(['set-filters'])

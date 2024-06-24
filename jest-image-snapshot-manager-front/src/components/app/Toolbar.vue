@@ -10,7 +10,8 @@
             'button-warning': item.color === 'warning',
             'button-green': item.color === 'green',
             'button-red': item.color === 'red',
-            'button-action': item.color === 'action'
+            'button-action': item.color === 'action',
+						'fill': item.fill
           }
         ]"
         @click="item.action()"

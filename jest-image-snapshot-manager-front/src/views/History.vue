@@ -52,7 +52,7 @@
       </div>
       <Table :columns="columns" :rows="history" :rowClass="rowClass" :rowClick="rowClick" />
     </div>
-    <!-- <div class="md:inline hidden mt-64 ml-8">
+    <div class="md:inline hidden mt-48 ml-8">
       <img
         :src="`${proxyApi}${useSnapshotStore.snapshots.find((e) => e.id === route.params.id)?.fullSrc}`"
         :class="[
@@ -66,7 +66,7 @@
         ]"
         @click="goToSnapshot(useSnapshotStore.snapshots.find((e) => e.id === route.params.id))"
       />
-    </div> -->
+    </div>
   </div>
 </template>
 <script setup>
@@ -81,35 +81,7 @@ import useDeviceStore from '@/stores/use-device-store'
 const router = useRouter()
 const route = useRoute()
 
-const device = computed({
-  get: () => useUserStore.getPreferences().device || null,
-  set: (v) => {
-    useUserStore.setPreferences({ device: v })
-    const current = useSnapshotStore.snapshots.find(
-      (e) => e.id === route.params.id && (full.value || !!e.truth)
-    )
-    history.value = useSnapshotStore.snapshots
-      .filter((e) => e.label === current?.label && v === e.device)
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-      .map((e) => ({
-        ...e,
-        projectLabel: useProjectStore.projects.find((p) => p.id === e.projectId)?.label
-      }))
-  }
-})
-
-const showFullHistory = ref(false)
-const toggleShowTruth = () => {
-  showFullHistory.value = !showFullHistory.value
-  const current = useSnapshotStore.snapshots.find((e) => e.id === route.params.id)
-  const truth = useSnapshotStore.snapshots.find((e) => !!e.truth && e.label === current.label)
-  router.push(
-    `/history/${showFullHistory.value ? current.id : truth.id}${showFullHistory.value ? '#full' : ''}`
-  )
-}
-
-onMounted(() => {
-  showFullHistory.value = route.hash === '#full'
+const setHistory = () => {
   const current = useSnapshotStore.snapshots.find(
     (e) => e.id === route.params.id && (full.value || !!e.truth)
   )
@@ -120,17 +92,46 @@ onMounted(() => {
       ...e,
       projectLabel: useProjectStore.projects.find((p) => p.id === e.projectId)?.label
     }))
+}
+
+watch(
+  () => route.path,
+  () => {
+    showFullHistory.value = route.hash === '#full'
+    setHistory()
+  }
+)
+
+const device = computed({
+  get: () => useUserStore.getPreferences().device || null,
+  set: (v) => {
+    useUserStore.setPreferences({ device: v })
+    setHistory()
+  }
 })
 
-onUpdated(() => {
+const showFullHistory = ref(false)
+const toggleShowTruth = () => {
+  showFullHistory.value = !showFullHistory.value
+  const current = useSnapshotStore.snapshots.find((e) => e.id === route.params.id)
+  const truth = useSnapshotStore.snapshots.find(
+    (e) => !!e.truth && e.label === current.label && e.device === device.value
+  )
+  router.push(
+    `/history/${showFullHistory.value ? current.id : truth.id}${showFullHistory.value ? '#full' : ''}`
+  )
+}
+
+onMounted(() => {
   showFullHistory.value = route.hash === '#full'
+  setHistory()
 })
 
 const full = computed(() => route.hash === '#full' || showFullHistory.value)
 const truths = computed(() => {
   const current = useSnapshotStore.snapshots.find((e) => e.id === route.params.id)
-  return useSnapshotStore.snapshots.filter((e) =>
-    full.value ? e.label === current.label : !!e.truth && !e.device
+  return useSnapshotStore.snapshots.filter(
+    (e) => (full.value ? e.label === current.label : !!e.truth) && e.device === device.value
   )
 })
 const current = computed(() => truths.value.findIndex((e) => e.id === route.params.id))
@@ -203,11 +204,6 @@ const columns = ref([
     label: 'Projet',
     class: 'w-32',
     field: (row) => useProjectStore.projects.find((e) => e.id === row.projectId)?.label
-  },
-  {
-    label: 'Device',
-    class: 'w-16',
-    field: 'device'
   },
   {
     label: 'Version',

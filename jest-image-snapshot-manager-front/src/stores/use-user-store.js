@@ -9,6 +9,7 @@ const toast = useToast()
 export default reactive({
   users: [],
   user: null,
+  preferences: null,
   get isAdmin() {
     return this.user?.role === 'ADMIN'
   },
@@ -137,19 +138,20 @@ export default reactive({
     }
   },
   setPreferences(preferences) {
-    localStorage.setItem(
-      'preferences',
-      JSON.stringify({
-        ...(localStorage.getItem('preferences')
-          ? JSON.parse(localStorage.getItem('preferences'))
-          : {}),
-        ...preferences
-      })
-    )
+    this.preferences = {
+      ...(localStorage.getItem('preferences')
+        ? JSON.parse(localStorage.getItem('preferences'))
+        : {}),
+      ...preferences
+    }
+    localStorage.setItem('preferences', JSON.stringify(this.preferences))
   },
   getPreferences() {
-    return localStorage.getItem('preferences')
-      ? JSON.parse(localStorage.getItem('preferences'))
-      : null
+    if (!this.preferences) {
+      this.preferences = localStorage.getItem('preferences')
+        ? JSON.parse(localStorage.getItem('preferences'))
+        : {}
+    }
+    return this.preferences
   }
 })

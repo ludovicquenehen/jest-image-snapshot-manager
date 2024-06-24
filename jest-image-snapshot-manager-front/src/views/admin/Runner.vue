@@ -17,9 +17,12 @@
       <button :disabled="disabledMerge" class="button-green md:w-16" @click="run('merge')">
         <i class="mdi mdi-call-merge" />
       </button>
-      <span v-if="currentProject?.commitInProgress || disabled" class="text-red text-semibold"
-        >Runner in progress</span
+      <div
+        v-if="currentProject?.commitInProgress || disabled"
+        class="bg-red-500 mt-2 px-4 py-2 flex items-center justify-center w-1/4 rounded-lg"
       >
+        <span class="text-white font-semibold">Runner in progress</span>
+      </div>
     </div>
   </div>
 </template>
@@ -36,9 +39,7 @@ const currentProject = computed(() => useProjectStore.projects.find((e) => e.id 
 const versionList = computed(() => {
   return [
     ...new Set(
-      useSnapshotStore.snapshots
-        .filter((e) => e.projectId === project.value)
-        .map((e) => e.version)
+      useSnapshotStore.snapshots.filter((e) => e.projectId === project.value).map((e) => e.version)
     )
   ]
 })
@@ -51,9 +52,7 @@ const disabledCommit = computed(
     !!project.value?.commitInProgress ||
     disabled.value ||
     useSnapshotStore.snapshots.some(
-      (e) =>
-        e.projectId === project.value &&
-        ['MERGE', 'CLOSE'].includes(e.status)
+      (e) => e.projectId === project.value && ['MERGE', 'CLOSE'].includes(e.status)
     )
 )
 const disabledMerge = computed(
@@ -63,9 +62,7 @@ const disabledMerge = computed(
     !!project.value?.commitInProgress ||
     disabled.value ||
     !useSnapshotStore.snapshots.some(
-      (e) =>
-        e.projectId === project.value &&
-        ['APPROVE', 'DECLINE'].includes(e.status)
+      (e) => e.projectId === project.value && ['APPROVE', 'DECLINE'].includes(e.status)
     )
 )
 
