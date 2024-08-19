@@ -5,6 +5,7 @@ import User from '../models/user.js'
 import { exec } from 'node:child_process'
 import util from 'node:util'
 import Files from './files.js'
+import env from '../../start/env.js'
 
 const runCommand = async (command: any) => {
   const execPromise = util.promisify(exec)
@@ -37,7 +38,7 @@ export default class Flow {
     try {
       project.commitInProgress = true
       await project.save()
-      await runCommand(`cd ./../${project.path} && pnpm test`)
+      await runCommand(`cd ./../${project.path} && pnpm test && pnpm diff`)
       project.commitInProgress = false
       await project.save()
     } catch (err) {
@@ -46,7 +47,7 @@ export default class Flow {
       return err
     }
 
-    fs.readdirSync(`./../${project.pathTests}/__image_snapshots__`, {
+    fs.readdirSync(`./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}`, {
       withFileTypes: true,
     }).forEach(async (file) => {
       if (!file.isDirectory() && file.name.endsWith('.png')) {
@@ -54,7 +55,7 @@ export default class Flow {
       }
     })
 
-    fs.readdirSync(`./../${project.pathTests}/__image_snapshots__/__received_output__`, {
+    fs.readdirSync(`./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}/__received_output__`, {
       withFileTypes: true,
     }).forEach(async (file) => {
       if (file.name.endsWith('.png')) {

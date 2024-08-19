@@ -37,15 +37,15 @@
         </div>
         <div class="flex md:flex-row flex-col md:gap-8 gap-1 mx-16 md:items-center">
           <div class="flex items-center gap-2">
-            <span class="flex bg-blue h-8 w-20 border-2 border-white"></span>
+            <span class="flex bg-blue-lightvpn h-8 w-20 border-2 border-white"></span>
             <span class="text-white font-semibold">Current</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="flex bg-green h-8 w-20 border-2 border-white"></span>
+            <span class="flex bg-green-light h-8 w-20 border-2 border-white"></span>
             <span class="text-white font-semibold">Truth</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="flex bg-blue-green h-8 w-20 border-2 border-white"></span>
+            <span class="flex bg-blue-green-light h-8 w-20 border-2 border-white"></span>
             <span class="text-white font-semibold">Both</span>
           </div>
         </div>

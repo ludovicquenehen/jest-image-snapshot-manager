@@ -1,6 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs'
 import Project from '../models/project.js'
+import env from '../../start/env.js'
 
 export default class Files {
   static async createPath(filePath: string) {
@@ -33,7 +34,7 @@ export default class Files {
   }
 
   static async tidy(
-		organization: string,
+    organization: string,
     project: Project,
     version: string,
     versionIteration: number,
@@ -41,13 +42,19 @@ export default class Files {
   ) {
     const dirPath = `./public/snapshots/${organization}/${project.id}/${version}/${versionIteration}/.`
     this.createPath(dirPath)
-    this.copy(newSnapshot, `./../${project.pathTests}/__image_snapshots__`, dirPath)
-    this.move(`./../${project.pathTests}/__image_snapshots__/__received_output__`, dirPath)
-    this.move(`./../${project.pathTests}/__image_snapshots__/__diff_output__`, dirPath)
+    this.copy(newSnapshot, `./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}`, dirPath)
+    this.move(`./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}/__received_output__`, dirPath)
+    this.move(`./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}/__diff_output__`, dirPath)
   }
 
-  static async moveTruth(organization: string,project: Project, version: string, versionIteration: number, src: string) {
-    const destPath = `./../${project.pathTests}/__image_snapshots__/${src.replace('-received', '')}`
+  static async moveTruth(
+    organization: string,
+    project: Project,
+    version: string,
+    versionIteration: number,
+    src: string
+  ) {
+    const destPath = `./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}/${src.replace('-received', '')}`
     await fs.unlinkSync(destPath)
     await fs.copyFileSync(
       `./public/snapshots/${organization}/${project.id}/${version}/${versionIteration}/${src}`,

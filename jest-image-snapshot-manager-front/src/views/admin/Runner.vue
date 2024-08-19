@@ -52,7 +52,7 @@ const disabledCommit = computed(
     !!project.value?.commitInProgress ||
     disabled.value ||
     useSnapshotStore.snapshots.some(
-      (e) => e.projectId === project.value && ['MERGE', 'CLOSE'].includes(e.status)
+      (e) => e.projectId === project.value && ['APPROVE', 'DECLINE'].includes(e.status)
     )
 )
 const disabledMerge = computed(
