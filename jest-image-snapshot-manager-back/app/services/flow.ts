@@ -39,6 +39,7 @@ export default class Flow {
       project.commitInProgress = true
       await project.save()
       await runCommand(`cd ./../${project.path} && pnpm test && pnpm diff`)
+			//await runCommand(`cd ./../${project.path} && pnpm diff`)
       project.commitInProgress = false
       await project.save()
     } catch (err) {
@@ -55,13 +56,17 @@ export default class Flow {
       }
     })
 
-    fs.readdirSync(`./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}/__received_output__`, {
-      withFileTypes: true,
-    }).forEach(async (file) => {
-      if (file.name.endsWith('.png')) {
-        snapshots.RECEIVED.push(file.name)
-      }
-    })
+    if (
+      fs.existsSync(`./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}/__received_output__`)
+    ) {
+      fs.readdirSync(`./../${project.pathTests}/${env.get('SNAPSHOTS_DIR')}/__received_output__`, {
+        withFileTypes: true,
+      }).forEach(async (file) => {
+        if (file.name.endsWith('.png')) {
+          snapshots.RECEIVED.push(file.name)
+        }
+      })
+    }
 
     const admin = await User.findOrFail(1)
     const versionIteration = await this.getVersionIteration(project, version)
@@ -109,7 +114,7 @@ export default class Flow {
 
     await Promise.all(
       snapshots.RECEIVED.map(async (src) => {
-        let label = src.replace('-received.png', '')
+        let label = src.replace('-received.png', '').replace('.png', '')
         let device: any = null
         suffixes.forEach((suffix) => {
           if (label.includes(suffix)) {

@@ -23,4 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-tests/${env.get('SNAPSHOTS_DIR')}
+tests/__image_snapshots__

@@ -22,6 +22,10 @@ export default class Files {
   }
 
   static async move(srcDir: string, destDir: string) {
+		if (!fs.existsSync(srcDir)) {
+			return;
+		}
+
     fs.readdir(srcDir, (err, files) => {
       if (err) throw err
 

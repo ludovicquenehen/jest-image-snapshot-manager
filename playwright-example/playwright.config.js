@@ -1,6 +1,6 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
-  testDir: './tests',
-  snapshotPathTemplate: '{testDir}/__screenshots__/__received_output__/{arg}{ext}',
+  testDir: "./tests",
+  snapshotPathTemplate: "{testDir}/__image_snapshots__/__received_output__/{arg}{ext}",
 });
